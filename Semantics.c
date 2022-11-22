@@ -17,7 +17,7 @@ extern SymTab *table;
 
 struct ExprRes *  doIntLit(char * digits)  { 
 
-   struct ExprRes *res;
+  struct ExprRes *res;
   
   res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
   res->Reg = AvailTmpReg();
@@ -28,12 +28,12 @@ struct ExprRes *  doIntLit(char * digits)  {
 
 struct ExprRes *  doRval(char * name)  { 
 
-   struct ExprRes *res;
+  struct ExprRes *res;
   
-   if (!findName(table, name)) {
-		writeIndicator(getCurrentColumnNum());
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
 		writeMessage("Undeclared variable");
-   }
+  }
   res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
   res->Reg = AvailTmpReg();
   res->Instrs = GenInstr(NULL,"lw",TmpRegName(res->Reg),name,NULL);
@@ -75,7 +75,7 @@ struct ExprRes * doSub(struct ExprRes * Res1, struct ExprRes * Res2) {
 
 struct ExprRes *  doMult(struct ExprRes * Res1, struct ExprRes * Res2)  { 
 
-   int reg;
+  int reg;
    
   reg = AvailTmpReg();
   AppendSeq(Res1->Instrs,Res2->Instrs);
@@ -103,6 +103,32 @@ struct ExprRes * doDiv(struct ExprRes * Res1, struct ExprRes * Res2) {
   ReleaseTmpReg(Res2->Reg);
   Res1->Reg = reg;
   free(Res2);
+  return Res1;
+}
+
+struct ExprRes * doMod(struct ExprRes * Res1, struct ExprRes * Res2) {
+  int reg;
+
+  reg = AvailTmpReg();
+
+  // Do divide
+  AppendSeq(Res1->Instrs, Res2->Instrs);
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "div",
+                                          TmpRegName(reg),
+                                          TmpRegName(Res1->Reg),
+                                          TmpRegName(Res2->Reg)));
+  ReleaseTmpReg(Res1->Reg);
+  ReleaseTmpReg(Res2->Reg);
+  Res1->Reg = reg;
+  free(Res2);
+
+  // get the remainder
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "mfhi",
+                                          TmpRegName(Res1->Reg),
+                                          NULL,
+                                          NULL));
+  ReleaseTmpReg(Res1->Reg);
+  // free()?
   return Res1;
 }
 
@@ -148,15 +174,15 @@ struct InstrSeq * doAssign(char *name, struct ExprRes * Expr) {
 
 extern struct ExprRes * doEq(struct ExprRes * Res1,  struct ExprRes * Res2) {
 	struct ExprRes * Res;
-    int reg = AvailTmpReg();
+  int reg = AvailTmpReg();
 	AppendSeq(Res1->Instrs, Res2->Instrs);
  	Res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
 
 	AppendSeq(Res1->Instrs, GenInstr(NULL, "seq", TmpRegName(reg), TmpRegName(Res1->Reg), TmpRegName(Res2->Reg)));
-    Res->Reg = reg;
+  Res->Reg = reg;
 	Res->Instrs = Res1->Instrs;
 	ReleaseTmpReg(Res1->Reg);
-  	ReleaseTmpReg(Res2->Reg);
+  ReleaseTmpReg(Res2->Reg);
 	free(Res1);
 	free(Res2);
 	return Res;
@@ -164,8 +190,8 @@ extern struct ExprRes * doEq(struct ExprRes * Res1,  struct ExprRes * Res2) {
 
 extern struct InstrSeq * doIf(struct ExprRes * Res, struct InstrSeq * seq) {
 	struct InstrSeq * seq2;
-    char * label = GenLabel();
-    AppendSeq(Res->Instrs, GenInstr(NULL, "beq", "$zero", TmpRegName(Res->Reg), label));
+  char * label = GenLabel();
+  AppendSeq(Res->Instrs, GenInstr(NULL, "beq", "$zero", TmpRegName(Res->Reg), label));
 	seq2 = AppendSeq(Res->Instrs, seq);
 	AppendSeq(seq2, GenInstr(label, NULL, NULL, NULL, NULL));
 	free(Res);
@@ -211,7 +237,7 @@ void Finish(struct InstrSeq *Code) {
  hasMore = startIterator(table);
  while (hasMore) {
 	AppendSeq(code,GenInstr((char *) getCurrentName(table),".word","0",NULL,NULL));
-    hasMore = nextEntry(table);
+  hasMore = nextEntry(table);
  }
   
   WriteSeq(code);

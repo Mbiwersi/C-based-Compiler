@@ -21,15 +21,13 @@ struct TmpReg {
 
 char Buf[16];
 
-char *
-CopyStr(char * AStr)
-{
+char * CopyStr(char * AStr) {
   return (AStr) ? strdup(AStr) : NULL;
 }
 
-struct InstrSeq * 	  
-GenInstr(char *Label, char *OpCode, char *Oprnd1, char *Oprnd2, char *Oprnd3)
-{ struct InstrSeq *instr;
+struct InstrSeq * GenInstr(char *Label, char *OpCode, char *Oprnd1, char *Oprnd2, char *Oprnd3)
+{ 
+  struct InstrSeq *instr;
   
   instr = (struct InstrSeq *) malloc(sizeof(struct InstrSeq));
   instr->Label = CopyStr(Label);
@@ -42,8 +40,7 @@ GenInstr(char *Label, char *OpCode, char *Oprnd1, char *Oprnd2, char *Oprnd3)
   return instr;
 }
 	
-extern struct InstrSeq * 
-AppendSeq(struct InstrSeq *Seq1, struct InstrSeq *Seq2)
+extern struct InstrSeq * AppendSeq(struct InstrSeq *Seq1, struct InstrSeq *Seq2)
 { struct InstrSeq *instr;
 
   if (!Seq1) return Seq2;
@@ -55,9 +52,8 @@ AppendSeq(struct InstrSeq *Seq1, struct InstrSeq *Seq2)
   return Seq1;
 }
 
-void	  
-WriteSeq(struct InstrSeq *ASeq)
-{ struct InstrSeq *instr;
+void WriteSeq(struct InstrSeq *ASeq) {
+  struct InstrSeq *instr;
 
   printf("WriteSeq\n");
   instr = ASeq;
@@ -75,9 +71,8 @@ WriteSeq(struct InstrSeq *ASeq)
   if (aFile != stdout) fclose(aFile);
 }
 
-char *
-GenLabel()
-{ char *label;
+char * GenLabel() { 
+  char *label;
 
   label = (char *) malloc(8);
   sprintf(label,"L%d",NextLabel++);
@@ -85,9 +80,8 @@ GenLabel()
   return label;
 }
 	 
-int
-AvailTmpReg()
-{	int i;
+int AvailTmpReg() {	
+  int i;
 
   for (i = 0; i < MAXREG; i++) {
     if (Registers[i].Free) {
@@ -100,9 +94,7 @@ AvailTmpReg()
   return -1;
 }
 
-char *
-TmpRegName(int RegNum)
-{
+char * TmpRegName(int RegNum) {
   if ((RegNum >= 0) && ( RegNum < MAXREG)) {
     return Registers[RegNum].Name;
   } 
@@ -111,18 +103,15 @@ TmpRegName(int RegNum)
   }
 }
 
-void
-ReleaseTmpReg(int ANum)
-{
+void ReleaseTmpReg(int ANum) {
   if ((ANum >= 0) && ( ANum < MAXREG)) {
     Registers[ANum].Free = 1;
   } 
   return;
 }
 
-void
-ResetAllTmpReg()
-{ int i;
+void ResetAllTmpReg() { 
+  int i;
 
   for (i = 0; i < MAXREG; i++) {
     Registers[i].Free = 1;
@@ -132,9 +121,8 @@ ResetAllTmpReg()
   return;
 }
 
-struct InstrSeq * 
-SaveSeq()
-{ struct InstrSeq * save, *code;
+struct InstrSeq * SaveSeq() { 
+  struct InstrSeq * save, *code;
   int i, scnt;
   char addr[8], offset[8];
   
@@ -157,9 +145,8 @@ SaveSeq()
   return code;
 }
 
-struct InstrSeq * 
-RestoreSeq()
-{ struct InstrSeq * code, * save;
+struct InstrSeq * RestoreSeq() { 
+  struct InstrSeq * code, * save;
   int i, scnt;
 
   char addr[8], offset[8];
@@ -182,16 +169,12 @@ RestoreSeq()
   return code;
 }
 
-char *						 
-Imm(int Val)
-{
+char * Imm(int Val) {
   sprintf(Buf,"%d",Val);
   return Buf;
 }
 
-char *						 
-RegOff(int Offset, char * Reg)
-{
+char * RegOff(int Offset, char * Reg) {
   sprintf(Buf,"%d(%s)",Offset,Reg);
   return Buf;
 }
