@@ -1,0 +1,10 @@
+1. int num1;
+2. int num2;
+3. num1 = 10;
+4. num2 = 20;
+5. if (num2+20+num2 == 3*num2) {
+6.  print num1;
+7.  print num2;
+8. }
+10. print num1;
+11. print num2;

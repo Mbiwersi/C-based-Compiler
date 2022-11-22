@@ -79,12 +79,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 1 "ExprEval.y"
+#line 22 "ExprEval.y"
 
- long val;
- char * string;
- struct ExprRes * ExprRes;
- struct InstrSeq * InstrSeq;
+  long val;
+  char * string;
+  struct ExprRes * ExprRes;
+  struct InstrSeq * InstrSeq;
 
 #line 90 "y.tab.h"
 

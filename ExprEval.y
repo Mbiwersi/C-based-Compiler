@@ -43,23 +43,24 @@ extern SymTab *table;
 
 %%
 
-Prog			:	Declarations StmtSeq {Finish($2);};
+Prog			    :	Declarations StmtSeq {Finish($2);};
 Declarations	:	Dec Declarations { };
-                |	{ };
-Dec			    :	Int Id ';' {enterName(table, $2);};
-StmtSeq 		:	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
-                |	{$$ = NULL;} ;
-Stmt			:	Write Expr ';' {$$ = doPrint($2);};
-                |	Id '=' Expr ';'	{$$ = doAssign($1, $3);};
-                |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
-BExpr		    :	Expr EQ Expr {$$ = doEq($1, $3);};
-Expr			:	Expr '+' Term {$$ = doAdd($1, $3); };
-                |	Term {$$ = $1; };
-Term		    :	Term '*' Factor	{$$ = doMult($1, $3); } ;
-                |	Factor { $$ = $1; } ;
+              |	{ };
+Dec			      :	Int Id ';' {enterName(table, $2);};
+StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
+              |	{$$ = NULL;} ;
+Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
+              |	Id '=' Expr ';'	{$$ = doAssign($1, $3);};
+              |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
+BExpr		      :	Expr EQ Expr {$$ = doEq($1, $3);};
+Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
+              // | Expr '-' Term {$$ = doSub($1, $3);};
+              |	Term {$$ = $1; };
+Term		      :	Term '*' Factor	{$$ = doMult($1, $3); } ;
+              |	Factor { $$ = $1; } ;
 Factor		    :	IntLit { $$ = doIntLit(yytext); };
-                |	Id { $$ = doRval($1); };
-Id			    : 	Ident { $$ = strdup(yytext);}
+              |	Id { $$ = doRval($1); };
+Id			      : 	Ident { $$ = strdup(yytext);}
  
 %%
 
