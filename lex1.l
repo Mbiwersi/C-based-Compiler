@@ -23,6 +23,7 @@ print					              {return Write;}
 \=\=					              {return EQ;}
 \=					                {return '=';}
 \+					                {return '+';}
+\-                          {return '-';}
 \*					                {return '*';}
 \;					                {return ';';}
 \{					                {return '{';}

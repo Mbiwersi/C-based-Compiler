@@ -31,6 +31,10 @@ main:
 	syscall	
 L1:
 	lw		$t1, num1
+	lw		$t2, num2
+	sub		$t3, $t1, $t2
+	sw		$t3, num1
+	lw		$t1, num1
 	li		$v0, 1
 	move		$a0, $t1
 	syscall	
