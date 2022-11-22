@@ -29,6 +29,7 @@ extern SymTab *table;
 %type <string> Id
 %type <ExprRes> Factor
 %type <ExprRes> Term
+%type <ExprRes> Term2
 %type <ExprRes> Expr
 %type <InstrSeq> StmtSeq
 %type <InstrSeq> Stmt
@@ -56,10 +57,12 @@ BExpr		      :	Expr EQ Expr {$$ = doEq($1, $3);};
 Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
               | Expr '-' Term {$$ = doSub($1, $3);};
               |	Term {$$ = $1; };
-Term		      :	Term '*' Factor	{$$ = doMult($1, $3); };
-              | Term '/' Factor {$$ = doDiv($1, $3);};
-              | Term '%' Factor {$$ = doMod($1, $3);};
-              |	Factor { $$ = $1; } ;
+Term		      :	Term '*' Term2	{$$ = doMult($1, $3); };
+              | Term '/' Term2 {$$ = doDiv($1, $3);};
+              | Term '%' Term2 {$$ = doMod($1, $3);};
+              |	Term2 { $$ = $1; } ;
+Term2         : '-' Term2 {$$ = doUnaryMin($2);};
+              | Factor {$$ = $1;};
 Factor		    :	IntLit { $$ = doIntLit(yytext); };
               |	Id { $$ = doRval($1); };
 Id			      : 	Ident { $$ = strdup(yytext);}

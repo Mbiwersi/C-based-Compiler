@@ -17,3 +17,7 @@
 17. print num2;
 18. num3 = num3%5;
 19. print num3;
+20. num3 = -num3;
+21. print num3;
+22. num3 = -num3;
+23. print num3;

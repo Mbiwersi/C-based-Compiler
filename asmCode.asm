@@ -85,6 +85,26 @@ L1:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
+	lw		$t1, num3
+	mul		$t2, $t1, -1
+	sw		$t2, num3
+	lw		$t1, num3
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	lw		$t1, num3
+	mul		$t2, $t1, -1
+	sw		$t2, num3
+	lw		$t1, num3
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
 	li		$v0, 10
 	syscall	
 	.data	

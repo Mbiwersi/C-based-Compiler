@@ -30,6 +30,7 @@ extern struct ExprRes * doSub(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes *  doMult(struct ExprRes * Res1,  struct ExprRes * Res2);
 extern struct ExprRes * doDiv(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes * doMod(struct ExprRes * Res1, struct ExprRes * Res2);
+extern struct ExprRes * doUnaryMin(struct ExprRes * Res1);
 extern struct InstrSeq *  doPrint(struct ExprRes * Expr);
 extern struct ExprRes * doEq (struct ExprRes * Res1,  struct ExprRes * Res2);
 extern struct InstrSeq * doIf(struct ExprRes *bRes, struct InstrSeq * seq);

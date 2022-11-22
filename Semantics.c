@@ -41,7 +41,7 @@ struct ExprRes *  doRval(char * name)  {
   return res;
 }
 
-struct ExprRes *  doAdd(struct ExprRes * Res1, struct ExprRes * Res2)  { 
+struct ExprRes * doAdd(struct ExprRes * Res1, struct ExprRes * Res2)  { 
 
   int reg;
    
@@ -73,7 +73,7 @@ struct ExprRes * doSub(struct ExprRes * Res1, struct ExprRes * Res2) {
   return Res1;
 }
 
-struct ExprRes *  doMult(struct ExprRes * Res1, struct ExprRes * Res2)  { 
+struct ExprRes * doMult(struct ExprRes * Res1, struct ExprRes * Res2)  { 
 
   int reg;
    
@@ -129,6 +129,21 @@ struct ExprRes * doMod(struct ExprRes * Res1, struct ExprRes * Res2) {
                                           NULL));
   ReleaseTmpReg(Res1->Reg);
   // free()?
+  return Res1;
+}
+
+struct ExprRes * doUnaryMin(struct ExprRes * Res1) {
+  int reg;
+
+  reg = AvailTmpReg();
+  // do mult * -1, Can I use the doMult()?
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "mul",
+                                          TmpRegName(reg),
+                                          TmpRegName(Res1->Reg),
+                                          "-1"));
+  ReleaseTmpReg(Res1->Reg);
+  Res1->Reg = reg;
+  //free();
   return Res1;
 }
 

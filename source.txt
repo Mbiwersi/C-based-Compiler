@@ -17,3 +17,7 @@ num2 = num2%3;
 print num2;
 num3 = num3%5;
 print num3;
+num3 = -num3;
+print num3;
+num3 = -num3;
+print num3;
