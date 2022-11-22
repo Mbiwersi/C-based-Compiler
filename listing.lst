@@ -6,5 +6,5 @@
 6.  print num1;
 7.  print num2;
 8. }
-10. print num1;
-11. print num2;
+9. print num1;
+10. print num2;
