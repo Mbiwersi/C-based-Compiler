@@ -57,6 +57,7 @@ Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
               | Expr '-' Term {$$ = doSub($1, $3);};
               |	Term {$$ = $1; };
 Term		      :	Term '*' Factor	{$$ = doMult($1, $3); } ;
+              | Term '/' Factor {$$ = doDiv($1, $3);};
               |	Factor { $$ = $1; } ;
 Factor		    :	IntLit { $$ = doIntLit(yytext); };
               |	Id { $$ = doRval($1); };

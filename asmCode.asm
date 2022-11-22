@@ -48,6 +48,17 @@ L1:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
+	lw		$t1, num2
+	li		$t2, 4
+	div		$t3, $t1, $t2
+	sw		$t3, num2
+	lw		$t1, num2
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
 	li		$v0, 10
 	syscall	
 	.data	

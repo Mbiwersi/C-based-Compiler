@@ -9,3 +9,5 @@
 9. num1 = num1 - num2;
 10. print num1;
 11. print num2;
+12. num2 = num2/4;
+13. print num2;
