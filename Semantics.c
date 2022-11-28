@@ -26,6 +26,26 @@ struct ExprRes *  doIntLit(char * digits)  {
   return res;
 }
 
+struct ExprRes * doBoolLit(char * bool) {
+  struct ExprRes * res;
+  res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
+  res->Reg = AvailTmpReg();
+
+  // see if its true or false
+  if(strcmp(bool, "true") == 0){
+    // put a non-zero in the reg
+    res->Instrs = GenInstr(NULL, "li", TmpRegName(res->Reg), "1", NULL);
+  }else if(strcmp(bool, "false") == 0){
+    // put 0 in the reg
+    res->Instrs = GenInstr(NULL, "li", TmpRegName(res->Reg), "0", NULL);
+  }else{
+    writeIndicator(getCurrentColumnNum());
+    writeMessage("Neither true or false");
+  }
+
+  return res;
+}
+
 struct ExprRes *  doRval(char * name)  { 
 
   struct ExprRes *res;
@@ -242,6 +262,23 @@ extern struct ExprRes * doEq(struct ExprRes * Res1,  struct ExprRes * Res2) {
 	free(Res1);
 	free(Res2);
 	return Res;
+}
+
+extern struct ExprRes * doLT(struct ExprRes * Res1, struct ExprRes * Res2) {
+  struct ExprRes * Res;
+  int reg = AvailTmpReg();
+  AppendSeq(Res1->Instrs, Res2->Instrs);
+  Res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
+
+  // do less-than
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "slt", TmpRegName(reg), TmpRegName(Res1->Reg), TmpRegName(Res2->Reg)));
+  Res->Reg = reg;
+  Res->Instrs = Res1->Instrs;
+  ReleaseTmpReg(Res1->Reg);
+  ReleaseTmpReg(Res2->Reg);
+  free(Res1);
+  free(Res2);
+  return Res;
 }
 
 extern struct InstrSeq * doIf(struct ExprRes * Res, struct InstrSeq * seq) {

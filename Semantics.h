@@ -34,6 +34,7 @@ extern struct ExprRes * doUnaryMin(struct ExprRes * Res1);
 extern struct ExprRes * doExponent(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct InstrSeq *  doPrint(struct ExprRes * Expr);
 extern struct ExprRes * doEq (struct ExprRes * Res1,  struct ExprRes * Res2);
+extern struct ExprRes * doLT (struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct InstrSeq * doIf(struct ExprRes *bRes, struct InstrSeq * seq);
 
 extern void	Finish(struct InstrSeq *Code);

@@ -7,6 +7,8 @@ main:
 	sw		$t0, num2
 	li		$t0, 13
 	sw		$t0, num3
+	li		$t0, 1
+	sw		$t0, num4
 	lw		$t0, num2
 	li		$t1, 20
 	add		$t2, $t0, $t1
@@ -24,87 +26,31 @@ main:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
-	lw		$t1, num2
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 L1:
 	lw		$t1, num1
 	lw		$t2, num2
 	sub		$t3, $t1, $t2
 	sw		$t3, num1
-	lw		$t1, num1
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num2
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	lw		$t1, num2
 	li		$t2, 4
 	div		$t3, $t1, $t2
 	sw		$t3, num2
 	lw		$t1, num2
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num2
 	li		$t2, 3
 	div		$t3, $t1, $t2
 	mfhi		$t3
 	sw		$t3, num2
-	lw		$t1, num2
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	lw		$t1, num3
 	li		$t2, 5
 	div		$t3, $t1, $t2
 	mfhi		$t3
 	sw		$t3, num3
 	lw		$t1, num3
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num3
 	mul		$t2, $t1, -1
 	sw		$t2, num3
 	lw		$t1, num3
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num3
 	mul		$t2, $t1, -1
 	sw		$t2, num3
-	lw		$t1, num3
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 2
 	li		$t2, 7
 	move		$t4, $t2
@@ -118,13 +64,6 @@ L2:	beq		$t4, $zero, L3
 L4:	li		$t5, 1
 L3:
 	sw		$t5, num2
-	lw		$t1, num2
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	lw		$t1, num2
 	li		$t2, 0
 	move		$t5, $t2
@@ -145,6 +84,46 @@ L6:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
+	lw		$t1, num4
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 1
+	li		$t2, 0
+	slt		$t5, $t1, $t2
+	sw		$t5, num4
+	lw		$t1, num4
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 0
+	li		$t2, 1
+	slt		$t5, $t1, $t2
+	sw		$t5, num4
+	lw		$t1, num4
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	lw		$t1, num4
+	li		$t2, 1
+	slt		$t5, $t1, $t2
+	sw		$t5, num4
+	lw		$t1, num4
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
 	li		$v0, 10
 	syscall	
 	.data	
@@ -153,3 +132,4 @@ _nl:	.asciiz		"\n"
 num1:	.word		0
 num2:	.word		0
 num3:	.word		0
+num4:	.word		0

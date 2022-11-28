@@ -17,10 +17,14 @@ digit [0-9]
 %%
 if					                {return IF;}
 int					                {return Int;}
+bool                        {return Bool;}
+true                        {return BoolLit;}
+false                       {return BoolLit;}
 print					              {return Write;}
 {letter}({letter}|{digit})*	{return Ident;}
 {digit}{digit}*		          {return IntLit;}
 \=\=					              {return EQ;}
+\<                          {return LT;}
 \=					                {return '=';}
 \+					                {return '+';}
 \-                          {return '-';}
