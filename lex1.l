@@ -25,6 +25,7 @@ print					              {return Write;}
 {digit}{digit}*		          {return IntLit;}
 \=\=					              {return EQ;}
 \<                          {return LT;}
+\>                          {return GT;}
 \=					                {return '=';}
 \+					                {return '+';}
 \-                          {return '-';}

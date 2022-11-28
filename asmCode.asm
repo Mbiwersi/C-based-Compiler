@@ -124,6 +124,44 @@ L6:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
+	li		$t1, 1
+	sw		$t1, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 0
+	sw		$t1, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 1
+	li		$t2, 0
+	slt		$t5, $t2, $t1
+	sw		$t5, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	lw		$t1, num5
+	sw		$t1, num4
+	lw		$t1, num4
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
 	li		$v0, 10
 	syscall	
 	.data	
@@ -133,3 +171,4 @@ num1:	.word		0
 num2:	.word		0
 num3:	.word		0
 num4:	.word		0
+num5:	.word		0

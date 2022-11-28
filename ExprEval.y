@@ -44,6 +44,7 @@ extern SymTab *table;
 %token IF
 %token EQ 
 %token LT
+%token GT
 
 %%
 
@@ -59,6 +60,7 @@ Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
 BExpr		      :	Expr EQ Expr {$$ = doEq($1, $3);};
               | Expr LT Expr {$$ = doLT($1, $3);};
+              | Expr GT Expr {$$ = doGT($1, $3);};
               | Expr {$$ = $1;};
 Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
               | Expr '-' Term {$$ = doSub($1, $3);};
