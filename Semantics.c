@@ -361,7 +361,32 @@ extern struct ExprRes * doGTE (struct ExprRes * Res1, struct ExprRes * Res2) {
   return Res;
 }
 
+extern struct ExprRes * doAnd (struct ExprRes * Res1,  struct ExprRes * Res2) {
+  printf("DOING AND\n");
+  struct ExprRes * Res;
+  int reg = AvailTmpReg();
+  AppendSeq(Res1->Instrs, Res2->Instrs);
+  Res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
 
+  printf("GOT HERE\n");
+  // do Logical and
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "and", TmpRegName(reg), TmpRegName(Res1->Reg), TmpRegName(Res2->Reg)));
+  printf("GOT HERE 2\n");
+
+  Res->Reg = reg;
+  printf("GOT HERE 3\n");
+
+  Res->Instrs = Res1->Instrs;
+  printf("GOT HERE 4\n");
+  ReleaseTmpReg(Res1->Reg);
+  ReleaseTmpReg(Res2->Reg);
+  printf("GOT HERE 5\n");
+  free(Res1);
+  printf("GOT HERE 6\n");
+  free(Res2);
+  printf("GOT HERE 7\n");
+  return Res;
+}
 
 extern struct InstrSeq * doIf(struct ExprRes * Res, struct InstrSeq * seq) {
 	struct InstrSeq * seq2;
