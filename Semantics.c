@@ -264,6 +264,23 @@ extern struct ExprRes * doEq(struct ExprRes * Res1,  struct ExprRes * Res2) {
 	return Res;
 }
 
+extern struct ExprRes * doNotEq (struct ExprRes * Res1,  struct ExprRes * Res2) {
+  struct ExprRes * Res;
+  int reg = AvailTmpReg();
+	AppendSeq(Res1->Instrs, Res2->Instrs);
+ 	Res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
+
+	AppendSeq(Res1->Instrs, GenInstr(NULL, "sne", TmpRegName(reg), TmpRegName(Res1->Reg), TmpRegName(Res2->Reg)));
+  Res->Reg = reg;
+	Res->Instrs = Res1->Instrs;
+	ReleaseTmpReg(Res1->Reg);
+  ReleaseTmpReg(Res2->Reg);
+	free(Res1);
+	free(Res2);
+	return Res;
+}
+
+
 extern struct ExprRes * doLT(struct ExprRes * Res1, struct ExprRes * Res2) {
   struct ExprRes * Res;
   int reg = AvailTmpReg();

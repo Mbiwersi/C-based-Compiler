@@ -43,6 +43,7 @@ extern SymTab *table;
 %token Write
 %token IF
 %token EQ 
+%token NEQ
 %token LT
 %token LTE
 %token GT
@@ -61,6 +62,7 @@ Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
 BExpr		      :	Expr EQ Expr {$$ = doEq($1, $3);};
+              | Expr NEQ Expr {$$ = doNotEq($1, $3);};
               | Expr LT Expr {$$ = doLT($1, $3);};
               | Expr LTE Expr {$$ = doLTE($1, $3);};
               | Expr GT Expr {$$ = doGT($1, $3);};

@@ -62,10 +62,11 @@ extern int yydebug;
     Write = 263,                   /* Write  */
     IF = 264,                      /* IF  */
     EQ = 265,                      /* EQ  */
-    LT = 266,                      /* LT  */
-    LTE = 267,                     /* LTE  */
-    GT = 268,                      /* GT  */
-    GTE = 269                      /* GTE  */
+    NEQ = 266,                     /* NEQ  */
+    LT = 267,                      /* LT  */
+    LTE = 268,                     /* LTE  */
+    GT = 269,                      /* GT  */
+    GTE = 270                      /* GTE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -82,10 +83,11 @@ extern int yydebug;
 #define Write 263
 #define IF 264
 #define EQ 265
-#define LT 266
-#define LTE 267
-#define GT 268
-#define GTE 269
+#define NEQ 266
+#define LT 267
+#define LTE 268
+#define GT 269
+#define GTE 270
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -98,7 +100,7 @@ union YYSTYPE
   struct ExprRes * ExprRes;
   struct InstrSeq * InstrSeq;
 
-#line 102 "y.tab.h"
+#line 104 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

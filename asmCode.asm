@@ -77,113 +77,46 @@ L5:	beq		$t5, $zero, L6
 L7:	li		$t6, 1
 L6:
 	sw		$t6, num2
-	lw		$t1, num2
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num4
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 1
 	li		$t2, 0
 	slt		$t5, $t1, $t2
 	sw		$t5, num4
-	lw		$t1, num4
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 0
 	li		$t2, 1
 	slt		$t5, $t1, $t2
 	sw		$t5, num4
 	lw		$t1, num4
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num4
 	li		$t2, 1
 	slt		$t5, $t1, $t2
 	sw		$t5, num4
-	lw		$t1, num4
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 1
 	sw		$t1, num5
-	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 0
 	sw		$t1, num5
-	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 1
 	li		$t2, 0
 	slt		$t5, $t2, $t1
 	sw		$t5, num5
 	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num5
 	sw		$t1, num4
-	lw		$t1, num4
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 1
 	li		$t2, 1
 	sle		$t5, $t1, $t2
 	sw		$t5, num4
-	lw		$t1, num4
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 2
 	li		$t2, 1
 	sle		$t5, $t1, $t2
 	sw		$t5, num4
-	lw		$t1, num4
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
+	li		$t1, 0
+	sw		$t1, num5
+	li		$t1, 1
+	li		$t2, 1
+	sge		$t5, $t1, $t2
+	sw		$t5, num5
+	li		$t1, 1
+	li		$t2, 2
+	sge		$t5, $t1, $t2
+	sw		$t5, num5
 	li		$t1, 0
 	sw		$t1, num5
 	lw		$t1, num5
@@ -195,7 +128,7 @@ L6:
 	syscall	
 	li		$t1, 1
 	li		$t2, 1
-	sge		$t5, $t1, $t2
+	seq		$t5, $t1, $t2
 	sw		$t5, num5
 	lw		$t1, num5
 	li		$v0, 1
@@ -205,8 +138,8 @@ L6:
 	la		$a0, _nl
 	syscall	
 	li		$t1, 1
-	li		$t2, 2
-	sge		$t5, $t1, $t2
+	li		$t2, 1
+	sne		$t5, $t1, $t2
 	sw		$t5, num5
 	lw		$t1, num5
 	li		$v0, 1
