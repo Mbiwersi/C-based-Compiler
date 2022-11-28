@@ -38,7 +38,7 @@ cc -o comp lex.yy.c y.tab.c SymTab.c Semantics.c CodeGen.c IOMngr.c main.c
 Execute the Program
 
 ```bash
-./comp source listing.lst asmCode.asm
+./comp source.txt listing.lst asmCode.asm
 ```
 
 ## Run Locally (Windows / GCC)
@@ -76,5 +76,5 @@ gcc -o comp lex.yy.c y.tab.c SymTab.c Semantics.c CodeGen.c IOMngr.c main.c
 Execute the Program
 
 ```bash
-./comp source listing.lst asmCode.asm
+./comp source.txt listing.lst asmCode.asm
 ```

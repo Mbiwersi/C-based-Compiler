@@ -62,6 +62,7 @@ Term		      :	Term '*' Term2	{$$ = doMult($1, $3); };
               | Term '%' Term2 {$$ = doMod($1, $3);};
               |	Term2 { $$ = $1; } ;
 Term2         : '-' Term2 {$$ = doUnaryMin($2);};
+              | Factor '^' Term2 {$$ = doExponent($1, $3);};
               | Factor {$$ = $1;};
 Factor		    :	IntLit { $$ = doIntLit(yytext); };
               |	Id { $$ = doRval($1); };

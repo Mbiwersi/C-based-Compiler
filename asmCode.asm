@@ -105,6 +105,46 @@ L1:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
+	li		$t1, 2
+	li		$t2, 7
+	move		$t4, $t2
+	move		$t5, $t1
+	beq		$t4, $zero, L4
+	sub		$t4, $t4, 1
+L2:	beq		$t4, $zero, L3
+	mul		$t5, $t5, $t1
+	sub		$t4, $t4, 1
+	j		L2
+L4:	li		$t5, 1
+L3:
+	sw		$t5, num2
+	lw		$t1, num2
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	lw		$t1, num2
+	li		$t2, 0
+	move		$t5, $t2
+	move		$t6, $t1
+	beq		$t5, $zero, L7
+	sub		$t5, $t5, 1
+L5:	beq		$t5, $zero, L6
+	mul		$t6, $t6, $t1
+	sub		$t5, $t5, 1
+	j		L5
+L7:	li		$t6, 1
+L6:
+	sw		$t6, num2
+	lw		$t1, num2
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
 	li		$v0, 10
 	syscall	
 	.data	

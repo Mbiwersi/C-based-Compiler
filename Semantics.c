@@ -147,6 +147,47 @@ struct ExprRes * doUnaryMin(struct ExprRes * Res1) {
   return Res1;
 }
 
+struct ExprRes * doExponent(struct ExprRes * Res1, struct ExprRes * Res2) {
+  int reg; // needed?
+
+  reg = AvailTmpReg();
+
+  // Reg to help with branch
+  int countReg;
+  countReg = AvailTmpReg();
+  int resultReg;
+  resultReg = AvailTmpReg();
+
+  AppendSeq(Res1->Instrs, Res2->Instrs);
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "move", TmpRegName(countReg), TmpRegName(Res2->Reg), NULL)); // make a counter
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "move",TmpRegName(resultReg), TmpRegName(Res1->Reg), NULL)); // move to a temp result reg
+
+  // need the where to jump label
+  char * label = GenLabel();
+  char * label2 = GenLabel();
+  // case for zero
+  char * zerolabel = GenLabel();
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "beq", TmpRegName(countReg), "$zero", zerolabel));
+
+  // case for non zero
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "sub", TmpRegName(countReg), TmpRegName(countReg), "1")); // decrease counter
+
+  AppendSeq(Res1->Instrs, GenInstr(label, "beq", TmpRegName(countReg), "$zero", label2));
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "mul", TmpRegName(resultReg), TmpRegName(resultReg), TmpRegName(Res1->Reg)));
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "sub", TmpRegName(countReg), TmpRegName(countReg), "1")); // decrease counter
+  AppendSeq(Res1->Instrs, GenInstr(NULL, "j", label, NULL, NULL));
+  AppendSeq(Res1->Instrs, GenInstr(zerolabel, "li", TmpRegName(resultReg), "1", NULL));
+  AppendSeq(Res1->Instrs, GenInstr(label2, NULL, NULL, NULL, NULL));
+
+  ReleaseTmpReg(Res1->Reg);
+  ReleaseTmpReg(Res2->Reg);
+  ReleaseTmpReg(countReg);
+  Res1->Reg = resultReg;
+  ReleaseTmpReg(resultReg);
+  free(Res2);
+  return Res1;
+}
+
 struct InstrSeq * doPrint(struct ExprRes * Expr) { 
 
   struct InstrSeq *code;
