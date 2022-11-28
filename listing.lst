@@ -38,5 +38,11 @@
 38. print num4;
 39. num4 = 2 <= 1;
 40. print num4;
+41. num5 = false;
+42. print num5;
+43. num5 = 1 >= 1;
+44. print num5;
+45. num5 = 1 >= 2;
+46. print num5;
                ^
 Illegal Character in lex

@@ -46,6 +46,7 @@ extern SymTab *table;
 %token LT
 %token LTE
 %token GT
+%token GTE
 
 %%
 
@@ -63,6 +64,7 @@ BExpr		      :	Expr EQ Expr {$$ = doEq($1, $3);};
               | Expr LT Expr {$$ = doLT($1, $3);};
               | Expr LTE Expr {$$ = doLTE($1, $3);};
               | Expr GT Expr {$$ = doGT($1, $3);};
+              | Expr GTE Expr {$$ = doGTE($1, $3);};
               | Expr {$$ = $1;};
 Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
               | Expr '-' Term {$$ = doSub($1, $3);};

@@ -64,7 +64,8 @@ extern int yydebug;
     EQ = 265,                      /* EQ  */
     LT = 266,                      /* LT  */
     LTE = 267,                     /* LTE  */
-    GT = 268                       /* GT  */
+    GT = 268,                      /* GT  */
+    GTE = 269                      /* GTE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -84,6 +85,7 @@ extern int yydebug;
 #define LT 266
 #define LTE 267
 #define GT 268
+#define GTE 269
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -96,7 +98,7 @@ union YYSTYPE
   struct ExprRes * ExprRes;
   struct InstrSeq * InstrSeq;
 
-#line 100 "y.tab.h"
+#line 102 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

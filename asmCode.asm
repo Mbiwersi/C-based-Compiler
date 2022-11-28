@@ -184,6 +184,37 @@ L6:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
+	li		$t1, 0
+	sw		$t1, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 1
+	li		$t2, 1
+	sge		$t5, $t1, $t2
+	sw		$t5, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 1
+	li		$t2, 2
+	sge		$t5, $t1, $t2
+	sw		$t5, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
 	li		$v0, 10
 	syscall	
 	.data	

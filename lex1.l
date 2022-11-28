@@ -26,6 +26,7 @@ print					              {return Write;}
 \=\=					              {return EQ;}
 \<\=                        {return LTE;}
 \<                          {return LT;}
+\>\=                        {return GTE;}
 \>                          {return GT;}
 \=					                {return '=';}
 \+					                {return '+';}

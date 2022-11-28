@@ -37,6 +37,7 @@ extern struct ExprRes * doEq (struct ExprRes * Res1,  struct ExprRes * Res2);
 extern struct ExprRes * doLT (struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes * doLTE (struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes * doGT (struct ExprRes * Res1, struct ExprRes * Res2);
+extern struct ExprRes * doGTE (struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct InstrSeq * doIf(struct ExprRes *bRes, struct InstrSeq * seq);
 
 extern void	Finish(struct InstrSeq *Code);
