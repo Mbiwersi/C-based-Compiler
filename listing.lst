@@ -36,5 +36,11 @@
 36. print num5;
 37. num5 = 1 != 1;
 38. print num5;
+39. num5 = false;
+40. print num5;
+41. num5 = !num5;
+42. print num5;
+43. num5 = !num5;
+44. print num5;
                ^
 Illegal Character in lex

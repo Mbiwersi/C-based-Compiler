@@ -29,6 +29,7 @@ print					              {return Write;}
 \<                          {return LT;}
 \>\=                        {return GTE;}
 \>                          {return GT;}
+\!                          {return NOT;}
 \=					                {return '=';}
 \+					                {return '+';}
 \-                          {return '-';}

@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 32
-#define YY_END_OF_BUFFER 33
+#define YY_NUM_RULES 33
+#define YY_END_OF_BUFFER 34
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,9 +362,9 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[55] =
     {   0,
-        0,    0,   33,   31,   28,   30,   29,   27,   31,   20,
-       25,   26,   18,   16,   17,   19,    8,   22,   12,   15,
-       14,    7,   21,    7,    7,    7,    7,    7,   23,   24,
+        0,    0,   34,   32,   29,   31,   30,   28,   15,   21,
+       26,   27,   19,   17,   18,   20,    8,   23,   12,   16,
+       14,    7,   22,    7,    7,    7,    7,    7,   24,   25,
        10,    8,   11,    9,   13,    7,    7,    7,    1,    7,
         7,    7,    7,    7,    2,    7,    7,    3,    7,    7,
         4,    5,    6,    0
@@ -835,67 +835,67 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 32 "lex1.l"
-{return '=';}
+{return NOT;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 33 "lex1.l"
-{return '+';}
+{return '=';}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 34 "lex1.l"
-{return '-';}
+{return '+';}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 35 "lex1.l"
-{return '*';}
+{return '-';}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 36 "lex1.l"
-{return '/';}
+{return '*';}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 37 "lex1.l"
-{return '%';}
+{return '/';}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 38 "lex1.l"
-{return '^';}
+{return '%';}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 39 "lex1.l"
-{return ';';}
+{return '^';}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 40 "lex1.l"
-{return '{';}
+{return ';';}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 41 "lex1.l"
-{return '}';}
+{return '{';}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 42 "lex1.l"
-{return '(';}
+{return '}';}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 43 "lex1.l"
-{return ')';}
+{return '(';}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 45 "lex1.l"
-{}
+#line 44 "lex1.l"
+{return ')';}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
@@ -908,23 +908,28 @@ YY_RULE_SETUP
 {}
 	YY_BREAK
 case 30:
-/* rule 30 can match eol */
 YY_RULE_SETUP
 #line 48 "lex1.l"
 {}
 	YY_BREAK
 case 31:
+/* rule 31 can match eol */
 YY_RULE_SETUP
-#line 50 "lex1.l"
-{writeIndicator(getCurrentColumnNum());
-				   writeMessage("Illegal Character in lex");}
+#line 49 "lex1.l"
+{}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 53 "lex1.l"
+#line 51 "lex1.l"
+{writeIndicator(getCurrentColumnNum());
+				   writeMessage("Illegal Character in lex");}
+	YY_BREAK
+case 33:
+YY_RULE_SETUP
+#line 54 "lex1.l"
 ECHO;
 	YY_BREAK
-#line 927 "lex.yy.c"
+#line 932 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1929,7 +1934,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 53 "lex1.l"
+#line 54 "lex1.l"
 
 
 	
