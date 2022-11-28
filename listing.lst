@@ -34,5 +34,9 @@
 34. print num5;
 35. num4 = num5;
 36. print num4;
+37. num4 = 1 <= 1;
+38. print num4;
+39. num4 = 2 <= 1;
+40. print num4;
                ^
 Illegal Character in lex

@@ -24,6 +24,7 @@ print					              {return Write;}
 {letter}({letter}|{digit})*	{return Ident;}
 {digit}{digit}*		          {return IntLit;}
 \=\=					              {return EQ;}
+\<\=                        {return LTE;}
 \<                          {return LT;}
 \>                          {return GT;}
 \=					                {return '=';}
