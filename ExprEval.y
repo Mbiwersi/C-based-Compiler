@@ -34,6 +34,7 @@ extern SymTab *table;
 %type <InstrSeq> StmtSeq
 %type <InstrSeq> Stmt
 %type <ExprRes> BExpr
+%type <ExprRes> BExpr2
 
 %token Ident 		
 %token IntLit 	
@@ -61,12 +62,13 @@ StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
 Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
-BExpr		      :	Expr EQ Expr {$$ = doEq($1, $3);};
-              | Expr NEQ Expr {$$ = doNotEq($1, $3);};
-              | Expr LT Expr {$$ = doLT($1, $3);};
+BExpr		      : Expr LT Expr {$$ = doLT($1, $3);};
               | Expr LTE Expr {$$ = doLTE($1, $3);};
               | Expr GT Expr {$$ = doGT($1, $3);};
               | Expr GTE Expr {$$ = doGTE($1, $3);};
+              | BExpr2 {$$ = $1;};
+BExpr2        :	Expr EQ Expr {$$ = doEq($1, $3);};
+              | Expr NEQ Expr {$$ = doNotEq($1, $3);};
               | Expr {$$ = $1;};
 Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
               | Expr '-' Term {$$ = doSub($1, $3);};
