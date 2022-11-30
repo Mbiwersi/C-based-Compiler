@@ -48,6 +48,7 @@
 48. num5 = false || false;
 49. print num5;
 50. num5 = true || num5;
-51. print num5;
+51. printlines(1);
+52. print num5;
                ^
 Illegal Character in lex

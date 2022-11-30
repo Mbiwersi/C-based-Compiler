@@ -60,16 +60,17 @@ extern int yydebug;
     BoolLit = 261,                 /* BoolLit  */
     Bool = 262,                    /* Bool  */
     Write = 263,                   /* Write  */
-    IF = 264,                      /* IF  */
-    AND = 265,                     /* AND  */
-    OR = 266,                      /* OR  */
-    EQ = 267,                      /* EQ  */
-    NEQ = 268,                     /* NEQ  */
-    NOT = 269,                     /* NOT  */
-    LT = 270,                      /* LT  */
-    LTE = 271,                     /* LTE  */
-    GT = 272,                      /* GT  */
-    GTE = 273                      /* GTE  */
+    Printlines = 264,              /* Printlines  */
+    IF = 265,                      /* IF  */
+    AND = 266,                     /* AND  */
+    OR = 267,                      /* OR  */
+    EQ = 268,                      /* EQ  */
+    NEQ = 269,                     /* NEQ  */
+    NOT = 270,                     /* NOT  */
+    LT = 271,                      /* LT  */
+    LTE = 272,                     /* LTE  */
+    GT = 273,                      /* GT  */
+    GTE = 274                      /* GTE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -84,16 +85,17 @@ extern int yydebug;
 #define BoolLit 261
 #define Bool 262
 #define Write 263
-#define IF 264
-#define AND 265
-#define OR 266
-#define EQ 267
-#define NEQ 268
-#define NOT 269
-#define LT 270
-#define LTE 271
-#define GT 272
-#define GTE 273
+#define Printlines 264
+#define IF 265
+#define AND 266
+#define OR 267
+#define EQ 268
+#define NEQ 269
+#define NOT 270
+#define LT 271
+#define LTE 272
+#define GT 273
+#define GTE 274
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -106,7 +108,7 @@ union YYSTYPE
   struct ExprRes * ExprRes;
   struct InstrSeq * InstrSeq;
 
-#line 110 "y.tab.h"
+#line 112 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

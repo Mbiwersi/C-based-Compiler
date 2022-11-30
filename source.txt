@@ -48,4 +48,5 @@ print num5;
 num5 = false || false;
 print num5;
 num5 = true || num5;
+printlines(1);
 print num5;

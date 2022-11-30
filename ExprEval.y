@@ -45,6 +45,7 @@ extern SymTab *table;
 %token BoolLit
 %token Bool
 %token Write
+%token Printlines
 %token IF
 %token AND
 %token OR
@@ -66,6 +67,7 @@ Dec			      :	Int Id ';' {enterName(table, $2);};
 StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
               |	{$$ = NULL;} ;
 Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
+              | Printlines '(' Expr ')' ';' {$$ = doPrintLines($3);};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
 BExpr         : BExpr OR BExpr1 {$$ = doOr($1, $3);};

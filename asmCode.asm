@@ -191,6 +191,15 @@ L6:
 	lw		$t2, num5
 	or		$t5, $t1, $t2
 	sw		$t5, num5
+	li		$t1, 1
+	move		$t2, $t1
+L8:	beq		$t2, $zero, L9
+	sub		$t2, $t2, 1
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	j		L8
+L9:
 	lw		$t1, num5
 	li		$v0, 1
 	move		$a0, $t1
