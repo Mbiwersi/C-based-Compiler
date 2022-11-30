@@ -14,6 +14,7 @@ extern int yyparse();
 void dumpTable();
 
 extern SymTab *table;
+extern SymTab *stringTable;
 
 
 %}
@@ -47,6 +48,8 @@ extern SymTab *table;
 %token Write
 %token Printlines
 %token Printspaces
+%token PrintString
+%token StringLit
 %token IF
 %token AND
 %token OR
@@ -70,6 +73,7 @@ StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
 Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
               | Printlines '(' Expr ')' ';' {$$ = doPrintLines($3);};
               | Printspaces '(' Expr ')' ';' {$$ = doPrintSpaces($3);};
+              | PrintString '(' Expr  ')' ';' {$$ = doPrintString();};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
 BExpr         : BExpr OR BExpr1 {$$ = doOr($1, $3);};
@@ -86,7 +90,7 @@ BExpr3        :	BExpr3 EQ Expr {$$ = doEq($1, $3);};
               | Expr {$$ = $1;};
 Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
               | Expr '-' Term {$$ = doSub($1, $3);};
-              |	Term {$$ = $1; };
+              |	Term {$$ = $1;};
 Term		      :	Term '*' Term2	{$$ = doMult($1, $3);};
               | Term '/' Term2 {$$ = doDiv($1, $3);};
               | Term '%' Term2 {$$ = doMod($1, $3);};
@@ -97,6 +101,7 @@ Term2         : '-' Term2 {$$ = doUnaryMin($2);};
               | Factor {$$ = $1;};
 Factor		    :	IntLit {$$ = doIntLit(yytext);};
               | BoolLit {$$ = doBoolLit(yytext);};
+              | StringLit {doStringLit(yytext);};
               |	Id { $$ = doRval($1); };
 Id			      : Ident { $$ = strdup(yytext);}
  

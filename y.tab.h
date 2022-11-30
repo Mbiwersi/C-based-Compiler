@@ -62,16 +62,18 @@ extern int yydebug;
     Write = 263,                   /* Write  */
     Printlines = 264,              /* Printlines  */
     Printspaces = 265,             /* Printspaces  */
-    IF = 266,                      /* IF  */
-    AND = 267,                     /* AND  */
-    OR = 268,                      /* OR  */
-    EQ = 269,                      /* EQ  */
-    NEQ = 270,                     /* NEQ  */
-    NOT = 271,                     /* NOT  */
-    LT = 272,                      /* LT  */
-    LTE = 273,                     /* LTE  */
-    GT = 274,                      /* GT  */
-    GTE = 275                      /* GTE  */
+    PrintString = 266,             /* PrintString  */
+    StringLit = 267,               /* StringLit  */
+    IF = 268,                      /* IF  */
+    AND = 269,                     /* AND  */
+    OR = 270,                      /* OR  */
+    EQ = 271,                      /* EQ  */
+    NEQ = 272,                     /* NEQ  */
+    NOT = 273,                     /* NOT  */
+    LT = 274,                      /* LT  */
+    LTE = 275,                     /* LTE  */
+    GT = 276,                      /* GT  */
+    GTE = 277                      /* GTE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -88,29 +90,31 @@ extern int yydebug;
 #define Write 263
 #define Printlines 264
 #define Printspaces 265
-#define IF 266
-#define AND 267
-#define OR 268
-#define EQ 269
-#define NEQ 270
-#define NOT 271
-#define LT 272
-#define LTE 273
-#define GT 274
-#define GTE 275
+#define PrintString 266
+#define StringLit 267
+#define IF 268
+#define AND 269
+#define OR 270
+#define EQ 271
+#define NEQ 272
+#define NOT 273
+#define LT 274
+#define LTE 275
+#define GT 276
+#define GTE 277
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "ExprEval.y"
+#line 23 "ExprEval.y"
 
   long val;
   char * string;
   struct ExprRes * ExprRes;
   struct InstrSeq * InstrSeq;
 
-#line 114 "y.tab.h"
+#line 118 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

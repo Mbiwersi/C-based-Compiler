@@ -51,5 +51,9 @@
 51. printlines(1);
 52. print num5;
 53. printspaces(10);
-                    ^
+54. printString("\nHello world\n");
+55. printString("It works\n");
+56. printString("Hello world\n");
+57. printString("Testing newlines\n");
+                                      ^
 Illegal Character in lex

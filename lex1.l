@@ -13,6 +13,8 @@
 
 letter [A-Za-z]
 digit [0-9]
+space [ ]
+nl [\\\n]
 
 %%
 if					                {return IF;}
@@ -23,8 +25,10 @@ false                       {return BoolLit;}
 print					              {return Write;}
 printlines                  {return Printlines;}
 printspaces                 {return Printspaces;}
+printString                 {return PrintString;}
 {letter}({letter}|{digit})*	{return Ident;}
 {digit}{digit}*		          {return IntLit;}
+\"({letter}|{digit}|{space}|{nl})*\"     {return StringLit;}
 \=\=					              {return EQ;}
 \&\&                        {return AND;}
 \|\|                        {return OR;}

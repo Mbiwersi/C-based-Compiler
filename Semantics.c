@@ -13,6 +13,9 @@
 
 extern SymTab *table;
 
+// String table
+extern SymTab *stringTable;
+
 /* Semantics support routines */
 
 struct ExprRes *  doIntLit(char * digits)  { 
@@ -44,6 +47,14 @@ struct ExprRes * doBoolLit(char * bool) {
   }
 
   return res;
+}
+
+// store the string lit in the a string symtable
+void doStringLit(char * string) {
+  if(!findName(stringTable, string)) {
+    enterName(stringTable, string);
+    setCurrentAttr(stringTable, GenLabel());
+  }
 }
 
 struct ExprRes *  doRval(char * name)  { 
@@ -296,6 +307,24 @@ extern struct InstrSeq * doPrintSpaces(struct ExprRes * Expr) {
   return code;
 }
 
+extern struct InstrSeq * doPrintString() {
+  struct InstrSeq *code;
+
+  char * string = getCurrentName(stringTable);
+
+  if(findName(stringTable, string)){
+    // write out the string
+
+    code = GenInstr(NULL,"li","$v0","4",NULL);
+    AppendSeq(code,GenInstr(NULL,"la","$a0",(char *) getCurrentAttr(stringTable),NULL));
+    AppendSeq(code,GenInstr(NULL,"syscall",NULL,NULL,NULL));
+
+  }else {
+    writeIndicator(getCurrentColumnNum());
+		writeMessage("Did not find string");
+  }
+  return code;
+}
 
 struct InstrSeq * doAssign(char *name, struct ExprRes * Expr) { 
 
@@ -472,6 +501,7 @@ extern struct InstrSeq * doIf(struct ExprRes * Res, struct InstrSeq * seq) {
   AppendSeq(Res->Instrs, GenInstr(NULL, "beq", "$zero", TmpRegName(Res->Reg), label));
 	seq2 = AppendSeq(Res->Instrs, seq);
 	AppendSeq(seq2, GenInstr(label, NULL, NULL, NULL, NULL));
+  ReleaseTmpReg(Res->Reg);
 	free(Res);
 	return seq2;
 }
@@ -512,6 +542,15 @@ void Finish(struct InstrSeq *Code) {
   AppendSeq(code,GenInstr(NULL,".align","4",NULL,NULL));
   AppendSeq(code,GenInstr("_nl",".asciiz","\"\\n\"",NULL,NULL));
   AppendSeq(code,GenInstr("_space",".asciiz","\" \"",NULL,NULL));
+  AppendSeq(code,GenInstr("_true",".asciiz","\"true\"",NULL,NULL));
+  AppendSeq(code,GenInstr("_false",".asciiz","\"false\"",NULL,NULL));
+
+  // print all of the string literals
+  hasMore = startIterator(stringTable);
+  while (hasMore) {
+    AppendSeq(code,GenInstr((char *) getCurrentAttr(stringTable),".asciiz",(char *) getCurrentName(stringTable),NULL,NULL));
+    hasMore = nextEntry(stringTable);
+  }
 
 
  hasMore = startIterator(table);

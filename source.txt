@@ -51,3 +51,7 @@ num5 = true || num5;
 printlines(1);
 print num5;
 printspaces(10);
+printString("\nHello world\n");
+printString("It works\n");
+printString("Hello world\n");
+printString("Testing newlines\n");
