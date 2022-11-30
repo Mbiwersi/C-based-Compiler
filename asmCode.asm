@@ -207,11 +207,21 @@ L9:
 	li		$v0, 4
 	la		$a0, _nl
 	syscall	
+	li		$t1, 10
+	move		$t2, $t1
+L10:	beq		$t2, $zero, L11
+	sub		$t2, $t2, 1
+	li		$v0, 4
+	la		$a0, _space
+	syscall	
+	j		L10
+L11:
 	li		$v0, 10
 	syscall	
 	.data	
 	.align		4
 _nl:	.asciiz		"\n"
+_space:	.asciiz		" "
 num1:	.word		0
 num2:	.word		0
 num3:	.word		0

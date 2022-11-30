@@ -262,6 +262,40 @@ extern struct InstrSeq * doPrintLines(struct ExprRes * Expr) {
   return code;
 }
 
+extern struct InstrSeq * doPrintSpaces(struct ExprRes * Expr) {
+  struct InstrSeq *code;
+    
+  code = Expr->Instrs;
+
+  // Reg to help with branch
+  int countReg; // is this unessary with the TmpRegName(Expr->Reg)?
+  countReg = AvailTmpReg();
+
+  // counter for while statement
+  char * label = GenLabel();
+  char * label2 = GenLabel();
+  AppendSeq(code, GenInstr(NULL, "move", TmpRegName(countReg), TmpRegName(Expr->Reg), NULL)); // make a counter
+
+  // while statement beq
+  AppendSeq(code, GenInstr(label, "beq", TmpRegName(countReg), "$zero", label2));
+  AppendSeq(code, GenInstr(NULL, "sub", TmpRegName(countReg), TmpRegName(countReg), "1")); // decrease counter
+
+  // print the newline
+  AppendSeq(code,GenInstr(NULL,"li","$v0","4",NULL));
+  AppendSeq(code,GenInstr(NULL,"la","$a0","_space",NULL));
+  AppendSeq(code,GenInstr(NULL,"syscall",NULL,NULL,NULL));
+  // jump back to while statement
+  AppendSeq(code, GenInstr(NULL, "j", label, NULL, NULL));
+  // label for branch to go to
+  AppendSeq(code, GenInstr(label2, NULL, NULL, NULL, NULL));
+
+  ReleaseTmpReg(Expr->Reg);
+  ReleaseTmpReg(countReg);
+  free(Expr);
+  // free(counterReg); // NEEDED?
+  return code;
+}
+
 
 struct InstrSeq * doAssign(char *name, struct ExprRes * Expr) { 
 
@@ -477,6 +511,8 @@ void Finish(struct InstrSeq *Code) {
   AppendSeq(code,GenInstr(NULL,".data",NULL,NULL,NULL));
   AppendSeq(code,GenInstr(NULL,".align","4",NULL,NULL));
   AppendSeq(code,GenInstr("_nl",".asciiz","\"\\n\"",NULL,NULL));
+  AppendSeq(code,GenInstr("_space",".asciiz","\" \"",NULL,NULL));
+
 
  hasMore = startIterator(table);
  while (hasMore) {

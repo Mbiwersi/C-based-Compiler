@@ -50,3 +50,4 @@ print num5;
 num5 = true || num5;
 printlines(1);
 print num5;
+printspaces(10);

@@ -22,6 +22,7 @@ true                        {return BoolLit;}
 false                       {return BoolLit;}
 print					              {return Write;}
 printlines                  {return Printlines;}
+printspaces                 {return Printspaces;}
 {letter}({letter}|{digit})*	{return Ident;}
 {digit}{digit}*		          {return IntLit;}
 \=\=					              {return EQ;}
