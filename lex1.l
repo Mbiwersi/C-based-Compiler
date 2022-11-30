@@ -25,6 +25,7 @@ print					              {return Write;}
 {digit}{digit}*		          {return IntLit;}
 \=\=					              {return EQ;}
 \&\&                        {return AND;}
+\|\|                        {return OR;}
 \!\=                        {return NEQ;}
 \<\=                        {return LTE;}
 \<                          {return LT;}

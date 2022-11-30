@@ -119,35 +119,32 @@ L6:
 	sw		$t5, num5
 	li		$t1, 0
 	sw		$t1, num5
-	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 1
 	li		$t2, 1
 	seq		$t5, $t1, $t2
 	sw		$t5, num5
-	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
 	li		$t1, 1
 	li		$t2, 1
 	sne		$t5, $t1, $t2
 	sw		$t5, num5
+	li		$t1, 0
+	sw		$t1, num5
 	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
+	not		$t2, $t1
+	sw		$t2, num5
+	lw		$t1, num5
+	not		$t2, $t1
+	sw		$t2, num5
+	li		$t1, 1
+	sw		$t1, num5
+	lw		$t1, num5
+	lw		$t2, num5
+	and		$t5, $t1, $t2
+	sw		$t5, num5
+	lw		$t1, num5
+	li		$t2, 0
+	and		$t5, $t1, $t2
+	sw		$t5, num5
 	li		$t1, 0
 	sw		$t1, num5
 	lw		$t1, num5
@@ -158,37 +155,8 @@ L6:
 	la		$a0, _nl
 	syscall	
 	lw		$t1, num5
-	not		$t2, $t1
-	sw		$t2, num5
-	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num5
-	not		$t2, $t1
-	sw		$t2, num5
-	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	li		$t1, 1
-	sw		$t1, num5
-	lw		$t1, num5
-	li		$v0, 1
-	move		$a0, $t1
-	syscall	
-	li		$v0, 4
-	la		$a0, _nl
-	syscall	
-	lw		$t1, num5
-	lw		$t2, num5
-	and		$t5, $t1, $t2
+	li		$t2, 1
+	or		$t5, $t1, $t2
 	sw		$t5, num5
 	lw		$t1, num5
 	li		$v0, 1
@@ -199,7 +167,29 @@ L6:
 	syscall	
 	lw		$t1, num5
 	li		$t2, 0
-	and		$t5, $t1, $t2
+	or		$t5, $t1, $t2
+	sw		$t5, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 0
+	li		$t2, 0
+	or		$t5, $t1, $t2
+	sw		$t5, num5
+	lw		$t1, num5
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$t1, 1
+	lw		$t2, num5
+	or		$t5, $t1, $t2
 	sw		$t5, num5
 	lw		$t1, num5
 	li		$v0, 1

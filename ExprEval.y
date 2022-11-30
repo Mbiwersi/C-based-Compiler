@@ -36,6 +36,8 @@ extern SymTab *table;
 %type <ExprRes> BExpr
 %type <ExprRes> BExpr1
 %type <ExprRes> BExpr2
+%type <ExprRes> BExpr3
+
 
 %token Ident 		
 %token IntLit 	
@@ -45,6 +47,7 @@ extern SymTab *table;
 %token Write
 %token IF
 %token AND
+%token OR
 %token EQ 
 %token NEQ
 %token NOT
@@ -65,15 +68,17 @@ StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
 Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
-BExpr         : BExpr AND BExpr1 {$$ = doAnd($1, $3);};
+BExpr         : BExpr OR BExpr1 {$$ = doOr($1, $3);};
               | BExpr1 {$$ = $1;};
-BExpr1		    : BExpr1 LT BExpr2 {$$ = doLT($1, $3);};
-              | BExpr1 LTE BExpr2 {$$ = doLTE($1, $3);};
-              | BExpr1 GT BExpr2 {$$ = doGT($1, $3);};
-              | BExpr1 GTE BExpr2 {$$ = doGTE($1, $3);};
+BExpr1        : BExpr1 AND BExpr2 {$$ = doAnd($1, $3);};
               | BExpr2 {$$ = $1;};
-BExpr2        :	BExpr2 EQ Expr {$$ = doEq($1, $3);};
-              | BExpr2 NEQ Expr {$$ = doNotEq($1, $3);};
+BExpr2		    : BExpr2 LT BExpr3 {$$ = doLT($1, $3);};
+              | BExpr2 LTE BExpr3 {$$ = doLTE($1, $3);};
+              | BExpr2 GT BExpr3 {$$ = doGT($1, $3);};
+              | BExpr2 GTE BExpr3 {$$ = doGTE($1, $3);};
+              | BExpr3 {$$ = $1;};
+BExpr3        :	BExpr3 EQ Expr {$$ = doEq($1, $3);};
+              | BExpr3 NEQ Expr {$$ = doNotEq($1, $3);};
               | Expr {$$ = $1;};
 Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
               | Expr '-' Term {$$ = doSub($1, $3);};
