@@ -55,3 +55,17 @@ printString("\nHello world\n");
 printString("It works\n");
 printString("Hello world\n");
 printString("Testing newlines\n");
+num1 = 1;
+while(num1 <= 5) {
+    printString("While loop\n");
+    num1 = num1 + 1;
+}
+num5 = true;
+num1 = 1;
+while(num5) {
+    if(num1 == 5){
+        num5 = false;
+    }
+    printString("if while statement test\n");
+    num1 = num1 + 1;
+}

@@ -506,6 +506,23 @@ extern struct InstrSeq * doIf(struct ExprRes * Res, struct InstrSeq * seq) {
 	return seq2;
 }
 
+extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq) {
+  struct InstrSeq * seq2;
+  // create a label to jump to before the condition
+  char * label = GenLabel();
+  char * label2 = GenLabel();
+  seq2 = GenInstr(label, NULL, NULL, NULL, NULL);
+  AppendSeq(seq2, bRes->Instrs);
+  AppendSeq(seq2, GenInstr(NULL, "beq", "$zero", TmpRegName(bRes->Reg), label2));
+  AppendSeq(seq2, seq);
+  AppendSeq(seq2, GenInstr(NULL, "j", label, NULL, NULL));
+	AppendSeq(seq2, GenInstr(label2, NULL, NULL, NULL, NULL));
+
+  free(bRes);
+
+  return seq2;
+}
+
 /*
 
 extern struct InstrSeq * doIf(struct ExprRes *res1, struct ExprRes *res2, struct InstrSeq * seq) {

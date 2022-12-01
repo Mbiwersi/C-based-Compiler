@@ -55,5 +55,19 @@
 55. printString("It works\n");
 56. printString("Hello world\n");
 57. printString("Testing newlines\n");
-                                      ^
+58. num1 = 1;
+59. while(num1 <= 5) {
+60.     printString("While loop\n");
+61.     num1 = num1 + 1;
+62. }
+63. num5 = true;
+64. num1 = 1;
+65. while(num5) {
+66.     if(num1 == 5){
+67.         num5 = false;
+68.     }
+69.     printString("if while statement test\n");
+70.     num1 = num1 + 1;
+71. }
+     ^
 Illegal Character in lex

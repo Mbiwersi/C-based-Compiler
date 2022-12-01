@@ -228,6 +228,45 @@ L11:
 	li		$v0, 4
 	la		$a0, L15
 	syscall	
+	li		$t0, 1
+	sw		$t0, num1
+L17:
+	lw		$t0, num1
+	li		$t1, 5
+	sle		$t4, $t0, $t1
+	beq		$zero, $t4, L18
+	li		$v0, 4
+	la		$a0, L16
+	syscall	
+	lw		$t0, num1
+	li		$t1, 1
+	add		$t5, $t0, $t1
+	sw		$t5, num1
+	j		L17
+L18:
+	li		$t0, 1
+	sw		$t0, num5
+	li		$t0, 1
+	sw		$t0, num1
+L21:
+	lw		$t0, num5
+	beq		$zero, $t0, L22
+	lw		$t1, num1
+	li		$t5, 5
+	seq		$t6, $t1, $t5
+	beq		$zero, $t6, L19
+	li		$t1, 0
+	sw		$t1, num5
+L19:
+	li		$v0, 4
+	la		$a0, L20
+	syscall	
+	lw		$t1, num1
+	li		$t5, 1
+	add		$t6, $t1, $t5
+	sw		$t6, num1
+	j		L21
+L22:
 	li		$v0, 10
 	syscall	
 	.data	
@@ -240,6 +279,8 @@ L14:	.asciiz		"Hello world\n"
 L13:	.asciiz		"It works\n"
 L12:	.asciiz		"\nHello world\n"
 L15:	.asciiz		"Testing newlines\n"
+L16:	.asciiz		"While loop\n"
+L20:	.asciiz		"if while statement test\n"
 num1:	.word		0
 num2:	.word		0
 num3:	.word		0
