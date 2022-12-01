@@ -18,6 +18,7 @@ nl [\\\n]
 
 %%
 if					                {return IF;}
+else                        {return ELSE;}
 while                       {return WHILE;}
 int					                {return Int;}
 bool                        {return Bool;}

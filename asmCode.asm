@@ -267,6 +267,32 @@ L19:
 	sw		$t6, num1
 	j		L21
 L22:
+	li		$t1, 1
+	sw		$t1, num5
+	lw		$t1, num5
+	beq		$zero, $t1, L25
+	li		$v0, 4
+	la		$a0, L23
+	syscall	
+	j		L26
+L25:
+	li		$v0, 4
+	la		$a0, L24
+	syscall	
+L26:
+	li		$t1, 0
+	sw		$t1, num5
+	lw		$t1, num5
+	beq		$zero, $t1, L27
+	li		$v0, 4
+	la		$a0, L23
+	syscall	
+	j		L28
+L27:
+	li		$v0, 4
+	la		$a0, L24
+	syscall	
+L28:
 	li		$v0, 10
 	syscall	
 	.data	
@@ -278,9 +304,11 @@ _false:	.asciiz		"false"
 L14:	.asciiz		"Hello world\n"
 L13:	.asciiz		"It works\n"
 L12:	.asciiz		"\nHello world\n"
+L23:	.asciiz		"Condition is true\n"
 L15:	.asciiz		"Testing newlines\n"
 L16:	.asciiz		"While loop\n"
 L20:	.asciiz		"if while statement test\n"
+L24:	.asciiz		"Condition is false\n"
 num1:	.word		0
 num2:	.word		0
 num3:	.word		0

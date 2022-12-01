@@ -48,6 +48,7 @@ extern struct ExprRes * doGTE (struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes * doAnd (struct ExprRes * Res1,  struct ExprRes * Res2);
 extern struct ExprRes * doOr (struct ExprRes * Res1,  struct ExprRes * Res2);
 extern struct InstrSeq * doIf(struct ExprRes *bRes, struct InstrSeq * seq);
+extern struct InstrSeq * doIfElse(struct ExprRes *bRes, struct InstrSeq * seq, struct InstrSeq * seq2);
 extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq);
 
 

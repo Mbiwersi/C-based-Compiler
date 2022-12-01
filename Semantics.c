@@ -506,6 +506,31 @@ extern struct InstrSeq * doIf(struct ExprRes * Res, struct InstrSeq * seq) {
 	return seq2;
 }
 
+extern struct InstrSeq * doIfElse(struct ExprRes *bRes, struct InstrSeq * ifSeq, struct InstrSeq * elseSeq) {
+  struct InstrSeq * seq2;
+  char * elseLabel = GenLabel();
+  char * finishLabel = GenLabel();
+
+  // test condition, jump to else if needed
+  AppendSeq(bRes->Instrs, GenInstr(NULL, "beq", "$zero", TmpRegName(bRes->Reg), elseLabel));
+  seq2 = AppendSeq(bRes->Instrs, ifSeq);
+
+  // Add jump passed else
+  AppendSeq(seq2, GenInstr(NULL, "j", finishLabel, NULL, NULL));
+
+  // Append else instructions
+  AppendSeq(seq2, GenInstr(elseLabel, NULL, NULL, NULL, NULL));
+  AppendSeq(seq2, elseSeq);
+  
+  // Append finish label to jump to after conclusion of if instructions
+  AppendSeq(seq2, GenInstr(finishLabel, NULL, NULL, NULL, NULL));
+
+  ReleaseTmpReg(bRes->Reg);
+  free(bRes);
+
+  return seq2;
+}
+
 extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq) {
   struct InstrSeq * seq2;
   // create a label to jump to before the condition

@@ -51,6 +51,7 @@ extern SymTab *stringTable;
 %token PrintString
 %token StringLit
 %token IF
+%token ELSE
 %token WHILE
 %token AND
 %token OR
@@ -77,6 +78,7 @@ Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
               | PrintString '(' Expr  ')' ';' {$$ = doPrintString();};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
+              | IF '(' BExpr ')' '{' StmtSeq '}' ELSE '{' StmtSeq '}' {$$ = doIfElse($3, $6, $10);};
               | WHILE '(' BExpr ')' '{' StmtSeq '}' {$$ = doWhile($3, $6);};
 BExpr         : BExpr OR BExpr1 {$$ = doOr($1, $3);};
               | BExpr1 {$$ = $1;};

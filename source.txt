@@ -69,3 +69,17 @@ while(num5) {
     printString("if while statement test\n");
     num1 = num1 + 1;
 }
+num5 = true;
+if(num5){
+    printString("Condition is true\n");
+}
+else {
+    printString("Condition is false\n");
+}
+num5 = false;
+if(num5){
+    printString("Condition is true\n");
+}
+else {
+    printString("Condition is false\n");
+}

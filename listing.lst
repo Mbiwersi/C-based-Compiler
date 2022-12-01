@@ -69,5 +69,19 @@
 69.     printString("if while statement test\n");
 70.     num1 = num1 + 1;
 71. }
+72. num5 = true;
+73. if(num5){
+74.     printString("Condition is true\n");
+75. }
+76. else {
+77.     printString("Condition is false\n");
+78. }
+79. num5 = false;
+80. if(num5){
+81.     printString("Condition is true\n");
+82. }
+83. else {
+84.     printString("Condition is false\n");
+85. }
      ^
 Illegal Character in lex
