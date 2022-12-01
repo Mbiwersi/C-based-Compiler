@@ -59,23 +59,24 @@ extern int yydebug;
     Int = 260,                     /* Int  */
     BoolLit = 261,                 /* BoolLit  */
     Bool = 262,                    /* Bool  */
-    Write = 263,                   /* Write  */
-    Printlines = 264,              /* Printlines  */
-    Printspaces = 265,             /* Printspaces  */
-    PrintString = 266,             /* PrintString  */
-    StringLit = 267,               /* StringLit  */
-    IF = 268,                      /* IF  */
-    ELSE = 269,                    /* ELSE  */
-    WHILE = 270,                   /* WHILE  */
-    AND = 271,                     /* AND  */
-    OR = 272,                      /* OR  */
-    EQ = 273,                      /* EQ  */
-    NEQ = 274,                     /* NEQ  */
-    NOT = 275,                     /* NOT  */
-    LT = 276,                      /* LT  */
-    LTE = 277,                     /* LTE  */
-    GT = 278,                      /* GT  */
-    GTE = 279                      /* GTE  */
+    Read = 263,                    /* Read  */
+    Write = 264,                   /* Write  */
+    Printlines = 265,              /* Printlines  */
+    Printspaces = 266,             /* Printspaces  */
+    PrintString = 267,             /* PrintString  */
+    StringLit = 268,               /* StringLit  */
+    IF = 269,                      /* IF  */
+    ELSE = 270,                    /* ELSE  */
+    WHILE = 271,                   /* WHILE  */
+    AND = 272,                     /* AND  */
+    OR = 273,                      /* OR  */
+    EQ = 274,                      /* EQ  */
+    NEQ = 275,                     /* NEQ  */
+    NOT = 276,                     /* NOT  */
+    LT = 277,                      /* LT  */
+    LTE = 278,                     /* LTE  */
+    GT = 279,                      /* GT  */
+    GTE = 280                      /* GTE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -89,23 +90,24 @@ extern int yydebug;
 #define Int 260
 #define BoolLit 261
 #define Bool 262
-#define Write 263
-#define Printlines 264
-#define Printspaces 265
-#define PrintString 266
-#define StringLit 267
-#define IF 268
-#define ELSE 269
-#define WHILE 270
-#define AND 271
-#define OR 272
-#define EQ 273
-#define NEQ 274
-#define NOT 275
-#define LT 276
-#define LTE 277
-#define GT 278
-#define GTE 279
+#define Read 263
+#define Write 264
+#define Printlines 265
+#define Printspaces 266
+#define PrintString 267
+#define StringLit 268
+#define IF 269
+#define ELSE 270
+#define WHILE 271
+#define AND 272
+#define OR 273
+#define EQ 274
+#define NEQ 275
+#define NOT 276
+#define LT 277
+#define LTE 278
+#define GT 279
+#define GTE 280
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -118,7 +120,7 @@ union YYSTYPE
   struct ExprRes * ExprRes;
   struct InstrSeq * InstrSeq;
 
-#line 122 "y.tab.h"
+#line 124 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

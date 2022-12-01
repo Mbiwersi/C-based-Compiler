@@ -239,6 +239,21 @@ struct InstrSeq * doPrint(struct ExprRes * Expr) {
   return code;
 }
 
+extern struct InstrSeq * doRead(char * varName) {
+  struct InstrSeq *code;
+  
+  if (!findName(table, varName)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+  
+  code = GenInstr(NULL, "li", "$v0", "5", NULL);
+  AppendSeq(code, GenInstr(NULL, "syscall", NULL, NULL, NULL));
+  AppendSeq(code,GenInstr(NULL,"sw","$v0", varName,NULL));
+
+  return code;
+}
+
 extern struct InstrSeq * doPrintLines(struct ExprRes * Expr) {
   struct InstrSeq *code;
     
@@ -330,11 +345,10 @@ struct InstrSeq * doAssign(char *name, struct ExprRes * Expr) {
 
   struct InstrSeq *code;
   
-
-   if (!findName(table, name)) {
-		writeIndicator(getCurrentColumnNum());
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
 		writeMessage("Undeclared variable");
-   }
+  }
 
   code = Expr->Instrs;
   

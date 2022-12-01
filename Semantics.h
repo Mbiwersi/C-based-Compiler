@@ -35,6 +35,7 @@ extern struct ExprRes * doMod(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes * doUnaryMin(struct ExprRes * Res1);
 extern struct ExprRes * doExponent(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct InstrSeq *  doPrint(struct ExprRes * Expr);
+extern struct InstrSeq *  doRead(char * varName);
 extern struct InstrSeq * doPrintLines(struct ExprRes * Expr);
 extern struct InstrSeq * doPrintSpaces(struct ExprRes * Expr);
 extern struct InstrSeq * doPrintString();

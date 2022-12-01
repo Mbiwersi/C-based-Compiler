@@ -45,6 +45,7 @@ extern SymTab *stringTable;
 %token Int
 %token BoolLit
 %token Bool
+%token Read
 %token Write
 %token Printlines
 %token Printspaces
@@ -73,6 +74,7 @@ Dec			      :	Int Id ';' {enterName(table, $2);};
 StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
               |	{$$ = NULL;} ;
 Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
+              | Read '(' Id ')' ';' {printf("Read yytext = '%s'\n", $3); $$ = doRead($3);};
               | Printlines '(' Expr ')' ';' {$$ = doPrintLines($3);};
               | Printspaces '(' Expr ')' ';' {$$ = doPrintSpaces($3);};
               | PrintString '(' Expr  ')' ';' {$$ = doPrintString();};
@@ -106,7 +108,7 @@ Term2         : '-' Term2 {$$ = doUnaryMin($2);};
 Factor		    :	IntLit {$$ = doIntLit(yytext);};
               | BoolLit {$$ = doBoolLit(yytext);};
               | StringLit {doStringLit(yytext);};
-              |	Id { $$ = doRval($1); };
+              |	Id {printf("ID = '%s'\n", $1);$$ = doRval($1); };
 Id			      : Ident { $$ = strdup(yytext);}
  
 %%

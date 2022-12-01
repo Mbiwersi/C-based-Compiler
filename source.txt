@@ -83,3 +83,11 @@ if(num5){
 else {
     printString("Condition is false\n");
 }
+read(num1);
+if(num1 == 10){
+    printString("num1 is 10\n");
+}else{
+    printString("num2 is not 10\n");
+}
+read(num2);
+print num2;

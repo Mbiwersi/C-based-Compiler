@@ -28,6 +28,7 @@ print					              {return Write;}
 printlines                  {return Printlines;}
 printspaces                 {return Printspaces;}
 printString                 {return PrintString;}
+read                        {return Read;}
 {letter}({letter}|{digit})*	{return Ident;}
 {digit}{digit}*		          {return IntLit;}
 \"({letter}|{digit}|{space}|{nl})*\"     {return StringLit;}
