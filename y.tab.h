@@ -119,8 +119,9 @@ union YYSTYPE
   char * string;
   struct ExprRes * ExprRes;
   struct InstrSeq * InstrSeq;
+  struct IdList * IdList;
 
-#line 124 "y.tab.h"
+#line 125 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -239,19 +239,47 @@ struct InstrSeq * doPrint(struct ExprRes * Expr) {
   return code;
 }
 
-extern struct InstrSeq * doRead(char * varName) {
+// loop through the list for all of the vars, make one long sting of instr
+extern struct InstrSeq * doRead(struct IdList* list) {
   struct InstrSeq *code;
-  
-  if (!findName(table, varName)) {
-	  writeIndicator(getCurrentColumnNum());
-		writeMessage("Undeclared variable");
-  }
-  
+
   code = GenInstr(NULL, "li", "$v0", "5", NULL);
   AppendSeq(code, GenInstr(NULL, "syscall", NULL, NULL, NULL));
-  AppendSeq(code,GenInstr(NULL,"sw","$v0", varName,NULL));
+  AppendSeq(code,GenInstr(NULL,"sw","$v0", list->Id,NULL));
+    
+  list = list->Next;
+  while(list != NULL) {
+    if (!findName(table, list->Id)) {
+	    writeIndicator(getCurrentColumnNum());
+		  writeMessage("Undeclared variable");
+    }
+
+    AppendSeq(code, GenInstr(NULL, "li", "$v0", "5", NULL));
+    AppendSeq(code, GenInstr(NULL, "syscall", NULL, NULL, NULL));
+    AppendSeq(code, GenInstr(NULL,"sw","$v0", list->Id,NULL));
+    
+  
+    list = list->Next;
+  }
 
   return code;
+}
+
+extern struct IdList * createIdNode(char * varName) {
+  struct IdList * node;
+
+  node = (struct IdList *) malloc(sizeof(struct IdList));
+  node->Id = varName;
+  node->Next = NULL;
+
+  return node;
+}
+
+extern struct IdList * appendIdNode(struct IdList * list, char * varName) {
+  struct IdList * newNode = createIdNode(varName);
+  newNode->Next = list;
+
+  return newNode;
 }
 
 extern struct InstrSeq * doPrintLines(struct ExprRes * Expr) {

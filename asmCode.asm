@@ -293,9 +293,6 @@ L27:
 	la		$a0, L24
 	syscall	
 L28:
-	li		$v0, 5
-	syscall	
-	sw		$v0, num1
 	lw		$t1, num1
 	li		$t5, 10
 	seq		$t6, $t1, $t5
@@ -309,10 +306,72 @@ L31:
 	la		$a0, L30
 	syscall	
 L32:
+	lw		$t1, num2
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$v0, 5
+	syscall	
+	sw		$v0, num1
 	li		$v0, 5
 	syscall	
 	sw		$v0, num2
+	li		$v0, 5
+	syscall	
+	sw		$v0, num3
+	li		$v0, 5
+	syscall	
+	sw		$v0, num4
+	li		$v0, 5
+	syscall	
+	sw		$v0, num5
+	li		$v0, 4
+	la		$a0, L33
+	syscall	
+	lw		$t1, num1
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$v0, 4
+	la		$a0, L34
+	syscall	
 	lw		$t1, num2
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$v0, 4
+	la		$a0, L35
+	syscall	
+	lw		$t1, num3
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$v0, 4
+	la		$a0, L36
+	syscall	
+	lw		$t1, num4
+	li		$v0, 1
+	move		$a0, $t1
+	syscall	
+	li		$v0, 4
+	la		$a0, _nl
+	syscall	
+	li		$v0, 4
+	la		$a0, L37
+	syscall	
+	lw		$t1, num5
 	li		$v0, 1
 	move		$a0, $t1
 	syscall	
@@ -329,7 +388,12 @@ _true:	.asciiz		"true"
 _false:	.asciiz		"false"
 L14:	.asciiz		"Hello world\n"
 L13:	.asciiz		"It works\n"
+L33:	.asciiz		"num1 value "
+L34:	.asciiz		"num2 value "
+L35:	.asciiz		"num3 value "
+L36:	.asciiz		"num4 value "
 L12:	.asciiz		"\nHello world\n"
+L37:	.asciiz		"num5 value "
 L29:	.asciiz		"num1 is 10\n"
 L30:	.asciiz		"num2 is not 10\n"
 L23:	.asciiz		"Condition is true\n"

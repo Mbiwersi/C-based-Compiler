@@ -83,13 +83,22 @@
 83. else {
 84.     printString("Condition is false\n");
 85. }
-86. read(num1);
-87. if(num1 == 10){
-88.     printString("num1 is 10\n");
-89. }else{
-90.     printString("num2 is not 10\n");
-91. }
-92. read(num2);
-93. print num2;
-               ^
+86. if(num1 == 10){
+87.     printString("num1 is 10\n");
+88. }else{
+89.     printString("num2 is not 10\n");
+90. }
+91. print num2;
+92. read(num1, num2, num3, num4, num5);
+93. printString("num1 value ");
+94. print num1;
+95. printString("num2 value ");
+96. print num2;
+97. printString("num3 value ");
+98. print num3;
+99. printString("num4 value ");
+100. print num4;
+101. printString("num5 value ");
+102. print num5;
+                ^
 Illegal Character in lex
