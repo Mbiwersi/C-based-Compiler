@@ -97,4 +97,4 @@ num2 = 6;
 print(num1, num2);
 num4 = false;
 num5 = true;
-print(num4 && num5, num5 || num4);
+print(num4 && num5, num5 || num4, true && false);

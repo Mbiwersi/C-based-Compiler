@@ -97,6 +97,6 @@
 97. print(num1, num2);
 98. num4 = false;
 99. num5 = true;
-100. print(num4 && num5, num5 || num4);
-                 ^
-Illegal Character in YACC
+100. print(num4 && num5, num5 || num4, true && false);
+                                                      ^
+Illegal Character in lex
