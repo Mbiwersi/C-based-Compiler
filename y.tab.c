@@ -138,7 +138,7 @@ extern int yydebug;
     BoolLit = 261,                 /* BoolLit  */
     Bool = 262,                    /* Bool  */
     Read = 263,                    /* Read  */
-    Write = 264,                   /* Write  */
+    Print = 264,                   /* Print  */
     Printlines = 265,              /* Printlines  */
     Printspaces = 266,             /* Printspaces  */
     PrintString = 267,             /* PrintString  */
@@ -169,7 +169,7 @@ extern int yydebug;
 #define BoolLit 261
 #define Bool 262
 #define Read 263
-#define Write 264
+#define Print 264
 #define Printlines 265
 #define Printspaces 266
 #define PrintString 267
@@ -196,10 +196,11 @@ union YYSTYPE
   long val;
   char * string;
   struct ExprRes * ExprRes;
+  struct ExprResList * ExprResList;
   struct InstrSeq * InstrSeq;
   struct IdList * IdList;
 
-#line 203 "y.tab.c"
+#line 204 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -228,7 +229,7 @@ enum yysymbol_kind_t
   YYSYMBOL_BoolLit = 6,                    /* BoolLit  */
   YYSYMBOL_Bool = 7,                       /* Bool  */
   YYSYMBOL_Read = 8,                       /* Read  */
-  YYSYMBOL_Write = 9,                      /* Write  */
+  YYSYMBOL_Print = 9,                      /* Print  */
   YYSYMBOL_Printlines = 10,                /* Printlines  */
   YYSYMBOL_Printspaces = 11,               /* Printspaces  */
   YYSYMBOL_PrintString = 12,               /* PrintString  */
@@ -251,29 +252,30 @@ enum yysymbol_kind_t
   YYSYMBOL_29_ = 29,                       /* '='  */
   YYSYMBOL_30_ = 30,                       /* '{'  */
   YYSYMBOL_31_ = 31,                       /* '}'  */
-  YYSYMBOL_32_ = 32,                       /* '+'  */
-  YYSYMBOL_33_ = 33,                       /* '-'  */
-  YYSYMBOL_34_ = 34,                       /* '*'  */
-  YYSYMBOL_35_ = 35,                       /* '/'  */
-  YYSYMBOL_36_ = 36,                       /* '%'  */
-  YYSYMBOL_37_ = 37,                       /* '^'  */
-  YYSYMBOL_38_ = 38,                       /* ','  */
+  YYSYMBOL_32_ = 32,                       /* ','  */
+  YYSYMBOL_33_ = 33,                       /* '+'  */
+  YYSYMBOL_34_ = 34,                       /* '-'  */
+  YYSYMBOL_35_ = 35,                       /* '*'  */
+  YYSYMBOL_36_ = 36,                       /* '/'  */
+  YYSYMBOL_37_ = 37,                       /* '%'  */
+  YYSYMBOL_38_ = 38,                       /* '^'  */
   YYSYMBOL_YYACCEPT = 39,                  /* $accept  */
   YYSYMBOL_Prog = 40,                      /* Prog  */
   YYSYMBOL_Declarations = 41,              /* Declarations  */
   YYSYMBOL_Dec = 42,                       /* Dec  */
   YYSYMBOL_StmtSeq = 43,                   /* StmtSeq  */
   YYSYMBOL_Stmt = 44,                      /* Stmt  */
-  YYSYMBOL_BExpr = 45,                     /* BExpr  */
-  YYSYMBOL_BExpr1 = 46,                    /* BExpr1  */
-  YYSYMBOL_BExpr2 = 47,                    /* BExpr2  */
-  YYSYMBOL_BExpr3 = 48,                    /* BExpr3  */
-  YYSYMBOL_Expr = 49,                      /* Expr  */
-  YYSYMBOL_Term = 50,                      /* Term  */
-  YYSYMBOL_Term2 = 51,                     /* Term2  */
-  YYSYMBOL_Factor = 52,                    /* Factor  */
-  YYSYMBOL_IdentList = 53,                 /* IdentList  */
-  YYSYMBOL_Id = 54                         /* Id  */
+  YYSYMBOL_ExprList = 45,                  /* ExprList  */
+  YYSYMBOL_BExpr = 46,                     /* BExpr  */
+  YYSYMBOL_BExpr1 = 47,                    /* BExpr1  */
+  YYSYMBOL_BExpr2 = 48,                    /* BExpr2  */
+  YYSYMBOL_BExpr3 = 49,                    /* BExpr3  */
+  YYSYMBOL_Expr = 50,                      /* Expr  */
+  YYSYMBOL_Term = 51,                      /* Term  */
+  YYSYMBOL_Term2 = 52,                     /* Term2  */
+  YYSYMBOL_Factor = 53,                    /* Factor  */
+  YYSYMBOL_IdentList = 54,                 /* IdentList  */
+  YYSYMBOL_Id = 55                         /* Id  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -601,16 +603,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   107
+#define YYLAST   124
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  39
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  16
+#define YYNNTS  17
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  47
+#define YYNRULES  50
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  107
+#define YYNSTATES  114
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   280
@@ -630,13 +632,13 @@ static const yytype_int8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,    36,     2,     2,
-      27,    28,    34,    32,    38,    33,     2,    35,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,    37,     2,     2,
+      27,    28,    35,    33,    32,    34,     2,    36,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,    26,
        2,    29,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    37,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    38,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,    30,     2,    31,     2,     2,     2,     2,
@@ -662,11 +664,12 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    71,    71,    72,    73,    74,    75,    76,    77,    78,
-      79,    80,    81,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,    97,    98,
-      99,   100,   101,   102,   103,   104,   105,   106,   107,   108,
-     109,   110,   111,   112,   113,   114,   115,   116
+       0,    73,    73,    74,    75,    76,    77,    78,    79,    80,
+      81,    82,    83,    84,    85,    86,    87,    88,    89,    90,
+      91,    92,    93,    94,    95,    96,    97,    98,    99,   100,
+     101,   102,   103,   104,   105,   106,   107,   108,   109,   110,
+     111,   112,   113,   114,   115,   116,   117,   118,   119,   120,
+     121
 };
 #endif
 
@@ -683,12 +686,13 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "Ident", "IntLit",
-  "Int", "BoolLit", "Bool", "Read", "Write", "Printlines", "Printspaces",
+  "Int", "BoolLit", "Bool", "Read", "Print", "Printlines", "Printspaces",
   "PrintString", "StringLit", "IF", "ELSE", "WHILE", "AND", "OR", "EQ",
   "NEQ", "NOT", "LT", "LTE", "GT", "GTE", "';'", "'('", "')'", "'='",
-  "'{'", "'}'", "'+'", "'-'", "'*'", "'/'", "'%'", "'^'", "','", "$accept",
-  "Prog", "Declarations", "Dec", "StmtSeq", "Stmt", "BExpr", "BExpr1",
-  "BExpr2", "BExpr3", "Expr", "Term", "Term2", "Factor", "IdentList", "Id", YY_NULLPTR
+  "'{'", "'}'", "','", "'+'", "'-'", "'*'", "'/'", "'%'", "'^'", "$accept",
+  "Prog", "Declarations", "Dec", "StmtSeq", "Stmt", "ExprList", "BExpr",
+  "BExpr1", "BExpr2", "BExpr3", "Expr", "Term", "Term2", "Factor",
+  "IdentList", "Id", YY_NULLPTR
 };
 
 static const char *
@@ -698,7 +702,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-17)
+#define YYPACT_NINF (-28)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -712,17 +716,18 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      14,     4,     4,    10,    34,    14,   -17,    -6,    -3,   -17,
-      22,     5,    25,    30,    54,    56,    59,   -17,    34,    -4,
-     -17,   -17,   -17,     4,   -17,   -17,   -17,     5,     5,    21,
-      37,   -17,    50,   -17,     5,     5,     5,     5,     5,   -17,
-       5,    13,    52,   -17,   -17,   -17,     5,     5,     5,     5,
-       5,     5,    23,    31,    33,   -14,    15,    45,     8,     7,
-     -13,    -2,    65,     4,    37,    37,   -17,   -17,   -17,   -17,
-      66,    67,    68,     5,    69,     5,     5,     5,     5,     5,
-       5,     5,    70,   -17,   -17,   -17,   -17,   -17,   -17,    15,
-      34,    45,     8,     8,     8,     8,     7,     7,    34,    64,
-      71,    81,   -17,    74,    34,    75,   -17
+      75,    17,    17,    38,    37,    75,   -28,    29,    30,   -28,
+      25,     5,    39,    60,    61,    66,    67,   -28,    37,    68,
+     -28,   -28,   -28,    17,   -28,   -28,   -28,    10,    10,    10,
+      24,    40,   -28,    63,   -28,    10,    10,    10,    10,    10,
+     -28,    10,    35,    70,   -28,    71,    58,   -28,   -28,    10,
+      10,    10,    10,    10,    10,    26,    34,    36,   -13,    86,
+      49,    22,   -27,    15,     1,    79,    17,    80,    10,    40,
+      40,   -28,   -28,   -28,   -28,    81,    82,    83,    10,    84,
+      10,    10,    10,    10,    10,    10,    10,    85,   -28,   -28,
+     -28,   -28,   -28,   -28,   -28,   -28,    86,    37,    49,    22,
+      22,    22,    22,   -27,   -27,    37,    87,    88,    96,   -28,
+      90,    37,    91,   -28
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -730,31 +735,32 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       4,     0,     0,     0,     8,     4,    47,     0,     0,     1,
+       4,     0,     0,     0,     8,     4,    50,     0,     0,     1,
        0,     0,     0,     0,     0,     0,     0,     2,     8,     0,
-       3,     5,     6,     0,    41,    42,    43,     0,     0,     0,
-      32,    36,    40,    44,     0,     0,     0,     0,     0,     7,
-       0,     0,    46,    38,    37,     9,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    19,    21,    26,    29,
-       0,     0,     0,     0,    30,    31,    33,    34,    35,    39,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    14,    10,    45,    11,    12,    13,    18,
-       8,    20,    22,    23,    24,    25,    27,    28,     8,     0,
-       0,    15,    17,     0,     8,     0,    16
+       3,     5,     6,     0,    44,    45,    46,     0,     0,     0,
+       0,    35,    39,    43,    47,     0,     0,     0,     0,     0,
+       7,     0,     0,    49,    41,     0,    20,    40,     9,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    22,
+      24,    29,    32,     0,     0,     0,     0,     0,     0,    33,
+      34,    36,    37,    38,    42,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,    15,    11,
+      48,    10,    19,    12,    13,    14,    21,     8,    23,    25,
+      26,    27,    28,    30,    31,     8,     0,     0,    16,    18,
+       0,     8,     0,    17
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -17,   -17,    93,   -17,   -16,   -17,    20,    28,    32,     1,
-      -5,    38,   -15,   -17,    42,    -1
+     -28,   -28,   107,   -28,   -16,   -28,    45,    59,    43,    44,
+       2,    -7,   -25,   -17,   -28,    50,    -1
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     3,     4,     5,    17,    18,    55,    56,    57,    58,
-      59,    30,    31,    32,    41,    33
+       0,     3,     4,     5,    17,    18,    45,    58,    59,    60,
+      61,    62,    31,    32,    33,    42,    34
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -762,69 +768,76 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       7,     8,    39,    19,    73,    73,    29,     6,     6,    24,
-       9,    25,    43,    44,    74,    82,    73,    19,    26,     1,
-      21,     2,    42,    22,    83,    40,    27,    80,    81,    52,
-      53,    54,    75,    66,    67,    68,    69,     6,    28,    46,
-      47,    62,    10,    11,    12,    13,    14,    45,    15,    23,
-      16,    70,    34,    46,    47,    46,    47,    35,    60,    71,
-      61,    72,    42,    46,    47,    46,    47,    76,    77,    78,
-      79,    48,    49,    50,    99,    96,    97,    92,    93,    94,
-      95,    36,   100,    37,    64,    65,    38,    51,   105,    19,
-      63,    84,    86,    87,    88,   101,   103,    19,    20,    90,
-      98,    89,   102,    19,   104,    85,   106,    91
+       7,     8,    40,    19,    30,    78,    49,    50,     6,    24,
+      44,    25,    47,     6,    24,    79,    25,    19,    26,    78,
+       6,    46,    43,    26,    69,    70,    27,    88,    55,    56,
+      57,    27,    28,    78,    71,    72,    73,    74,     9,    29,
+       6,    85,    86,    87,    29,    10,    11,    12,    13,    14,
+      48,    15,    23,    16,    75,    21,    22,    49,    50,    49,
+      50,    46,    76,    65,    77,    43,    35,    49,    50,    49,
+      50,    81,    82,    83,    84,    51,    52,    53,   103,   104,
+       1,   106,     2,    99,   100,   101,   102,    36,    37,   107,
+      68,    49,    50,    38,    39,   112,    19,    41,    63,    67,
+      64,    54,    66,    80,    19,    89,    91,    93,    94,    95,
+      19,   110,    20,    92,    97,   105,    90,     0,   108,   109,
+     111,    96,   113,     0,    98
 };
 
 static const yytype_int8 yycheck[] =
 {
-       1,     2,    18,     4,    18,    18,    11,     3,     3,     4,
-       0,     6,    27,    28,    28,    28,    18,    18,    13,     5,
-      26,     7,    23,    26,    26,    29,    21,    19,    20,    34,
-      35,    36,    17,    48,    49,    50,    51,     3,    33,    32,
-      33,    28,     8,     9,    10,    11,    12,    26,    14,    27,
-      16,    28,    27,    32,    33,    32,    33,    27,    38,    28,
-      40,    28,    63,    32,    33,    32,    33,    22,    23,    24,
-      25,    34,    35,    36,    90,    80,    81,    76,    77,    78,
-      79,    27,    98,    27,    46,    47,    27,    37,   104,    90,
-      38,    26,    26,    26,    26,    31,    15,    98,     5,    30,
-      30,    73,    31,   104,    30,    63,    31,    75
+       1,     2,    18,     4,    11,    18,    33,    34,     3,     4,
+      27,     6,    29,     3,     4,    28,     6,    18,    13,    18,
+       3,    28,    23,    13,    49,    50,    21,    26,    35,    36,
+      37,    21,    27,    18,    51,    52,    53,    54,     0,    34,
+       3,    19,    20,    28,    34,     8,     9,    10,    11,    12,
+      26,    14,    27,    16,    28,    26,    26,    33,    34,    33,
+      34,    68,    28,    28,    28,    66,    27,    33,    34,    33,
+      34,    22,    23,    24,    25,    35,    36,    37,    85,    86,
+       5,    97,     7,    81,    82,    83,    84,    27,    27,   105,
+      32,    33,    34,    27,    27,   111,    97,    29,    39,    28,
+      41,    38,    32,    17,   105,    26,    26,    26,    26,    26,
+     111,    15,     5,    68,    30,    30,    66,    -1,    31,    31,
+      30,    78,    31,    -1,    80
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     5,     7,    40,    41,    42,     3,    54,    54,     0,
-       8,     9,    10,    11,    12,    14,    16,    43,    44,    54,
-      41,    26,    26,    27,     4,     6,    13,    21,    33,    49,
-      50,    51,    52,    54,    27,    27,    27,    27,    27,    43,
-      29,    53,    54,    51,    51,    26,    32,    33,    34,    35,
-      36,    37,    49,    49,    49,    45,    46,    47,    48,    49,
-      45,    45,    28,    38,    50,    50,    51,    51,    51,    51,
-      28,    28,    28,    18,    28,    17,    22,    23,    24,    25,
-      19,    20,    28,    26,    26,    53,    26,    26,    26,    46,
-      30,    47,    48,    48,    48,    48,    49,    49,    30,    43,
-      43,    31,    31,    15,    30,    43,    31
+       0,     5,     7,    40,    41,    42,     3,    55,    55,     0,
+       8,     9,    10,    11,    12,    14,    16,    43,    44,    55,
+      41,    26,    26,    27,     4,     6,    13,    21,    27,    34,
+      50,    51,    52,    53,    55,    27,    27,    27,    27,    27,
+      43,    29,    54,    55,    52,    45,    50,    52,    26,    33,
+      34,    35,    36,    37,    38,    50,    50,    50,    46,    47,
+      48,    49,    50,    46,    46,    28,    32,    28,    32,    51,
+      51,    52,    52,    52,    52,    28,    28,    28,    18,    28,
+      17,    22,    23,    24,    25,    19,    20,    28,    26,    26,
+      54,    26,    45,    26,    26,    26,    47,    30,    48,    49,
+      49,    49,    49,    50,    50,    30,    43,    43,    31,    31,
+      15,    30,    43,    31
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
        0,    39,    40,    41,    41,    42,    42,    43,    43,    44,
-      44,    44,    44,    44,    44,    44,    44,    44,    45,    45,
-      46,    46,    47,    47,    47,    47,    47,    48,    48,    48,
-      49,    49,    49,    50,    50,    50,    50,    51,    51,    51,
-      51,    52,    52,    52,    52,    53,    53,    54
+      44,    44,    44,    44,    44,    44,    44,    44,    44,    45,
+      45,    46,    46,    47,    47,    48,    48,    48,    48,    48,
+      49,    49,    49,    50,    50,    50,    51,    51,    51,    51,
+      52,    52,    52,    52,    53,    53,    53,    53,    54,    54,
+      55
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     2,     2,     0,     3,     3,     2,     0,     3,
-       5,     5,     5,     5,     4,     7,    11,     7,     3,     1,
-       3,     1,     3,     3,     3,     3,     1,     3,     3,     1,
-       3,     3,     1,     3,     3,     3,     1,     2,     2,     3,
-       1,     1,     1,     1,     1,     3,     1,     1
+       5,     5,     5,     5,     5,     4,     7,    11,     7,     3,
+       1,     3,     1,     3,     1,     3,     3,     3,     3,     1,
+       3,     3,     1,     3,     3,     1,     3,     3,     3,     1,
+       2,     2,     3,     1,     1,     1,     1,     1,     3,     1,
+       1
 };
 
 
@@ -1288,283 +1301,301 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* Prog: Declarations StmtSeq  */
-#line 71 "ExprEval.y"
+#line 73 "ExprEval.y"
                                                      {Finish((yyvsp[0].InstrSeq));}
-#line 1294 "y.tab.c"
+#line 1307 "y.tab.c"
     break;
 
   case 3: /* Declarations: Dec Declarations  */
-#line 72 "ExprEval.y"
+#line 74 "ExprEval.y"
                                          { }
-#line 1300 "y.tab.c"
+#line 1313 "y.tab.c"
     break;
 
   case 4: /* Declarations: %empty  */
-#line 73 "ExprEval.y"
+#line 75 "ExprEval.y"
                 { }
-#line 1306 "y.tab.c"
+#line 1319 "y.tab.c"
     break;
 
   case 5: /* Dec: Int Id ';'  */
-#line 74 "ExprEval.y"
+#line 76 "ExprEval.y"
                                            {enterName(table, (yyvsp[-1].string));}
-#line 1312 "y.tab.c"
+#line 1325 "y.tab.c"
     break;
 
   case 6: /* Dec: Bool Id ';'  */
-#line 75 "ExprEval.y"
+#line 77 "ExprEval.y"
                             {enterName(table, (yyvsp[-1].string));}
-#line 1318 "y.tab.c"
+#line 1331 "y.tab.c"
     break;
 
   case 7: /* StmtSeq: Stmt StmtSeq  */
-#line 76 "ExprEval.y"
+#line 78 "ExprEval.y"
                                              {(yyval.InstrSeq) = AppendSeq((yyvsp[-1].InstrSeq), (yyvsp[0].InstrSeq));}
-#line 1324 "y.tab.c"
+#line 1337 "y.tab.c"
     break;
 
   case 8: /* StmtSeq: %empty  */
-#line 77 "ExprEval.y"
-                {(yyval.InstrSeq) = NULL;}
-#line 1330 "y.tab.c"
-    break;
-
-  case 9: /* Stmt: Write Expr ';'  */
-#line 78 "ExprEval.y"
-                                               {(yyval.InstrSeq) = doPrint((yyvsp[-1].ExprRes));}
-#line 1336 "y.tab.c"
-    break;
-
-  case 10: /* Stmt: Read '(' IdentList ')' ';'  */
 #line 79 "ExprEval.y"
-                                           {(yyval.InstrSeq) = doRead((yyvsp[-2].IdList));}
-#line 1342 "y.tab.c"
+                {(yyval.InstrSeq) = NULL;}
+#line 1343 "y.tab.c"
     break;
 
-  case 11: /* Stmt: Printlines '(' Expr ')' ';'  */
+  case 9: /* Stmt: Print Expr ';'  */
 #line 80 "ExprEval.y"
-                                            {(yyval.InstrSeq) = doPrintLines((yyvsp[-2].ExprRes));}
-#line 1348 "y.tab.c"
+                                               {(yyval.InstrSeq) = doPrint((yyvsp[-1].ExprRes), "_nl");}
+#line 1349 "y.tab.c"
     break;
 
-  case 12: /* Stmt: Printspaces '(' Expr ')' ';'  */
+  case 10: /* Stmt: Print '(' ExprList ')' ';'  */
 #line 81 "ExprEval.y"
-                                             {(yyval.InstrSeq) = doPrintSpaces((yyvsp[-2].ExprRes));}
-#line 1354 "y.tab.c"
+                                           {printf("Doing printList\n");(yyval.InstrSeq) = doPrintList((yyvsp[-2].ExprResList));}
+#line 1355 "y.tab.c"
     break;
 
-  case 13: /* Stmt: PrintString '(' Expr ')' ';'  */
+  case 11: /* Stmt: Read '(' IdentList ')' ';'  */
 #line 82 "ExprEval.y"
-                                              {(yyval.InstrSeq) = doPrintString();}
-#line 1360 "y.tab.c"
+                                           {(yyval.InstrSeq) = doRead((yyvsp[-2].IdList));}
+#line 1361 "y.tab.c"
     break;
 
-  case 14: /* Stmt: Id '=' BExpr ';'  */
+  case 12: /* Stmt: Printlines '(' Expr ')' ';'  */
 #line 83 "ExprEval.y"
-                                        {(yyval.InstrSeq) = doAssign((yyvsp[-3].string), (yyvsp[-1].ExprRes));}
-#line 1366 "y.tab.c"
+                                            {(yyval.InstrSeq) = doPrintLines((yyvsp[-2].ExprRes));}
+#line 1367 "y.tab.c"
     break;
 
-  case 15: /* Stmt: IF '(' BExpr ')' '{' StmtSeq '}'  */
+  case 13: /* Stmt: Printspaces '(' Expr ')' ';'  */
 #line 84 "ExprEval.y"
-                                                 {(yyval.InstrSeq) = doIf((yyvsp[-4].ExprRes), (yyvsp[-1].InstrSeq));}
-#line 1372 "y.tab.c"
+                                             {(yyval.InstrSeq) = doPrintSpaces((yyvsp[-2].ExprRes));}
+#line 1373 "y.tab.c"
     break;
 
-  case 16: /* Stmt: IF '(' BExpr ')' '{' StmtSeq '}' ELSE '{' StmtSeq '}'  */
+  case 14: /* Stmt: PrintString '(' Expr ')' ';'  */
 #line 85 "ExprEval.y"
-                                                                      {(yyval.InstrSeq) = doIfElse((yyvsp[-8].ExprRes), (yyvsp[-5].InstrSeq), (yyvsp[-1].InstrSeq));}
-#line 1378 "y.tab.c"
+                                              {(yyval.InstrSeq) = doPrintString();}
+#line 1379 "y.tab.c"
     break;
 
-  case 17: /* Stmt: WHILE '(' BExpr ')' '{' StmtSeq '}'  */
+  case 15: /* Stmt: Id '=' BExpr ';'  */
 #line 86 "ExprEval.y"
-                                                    {(yyval.InstrSeq) = doWhile((yyvsp[-4].ExprRes), (yyvsp[-1].InstrSeq));}
-#line 1384 "y.tab.c"
+                                        {(yyval.InstrSeq) = doAssign((yyvsp[-3].string), (yyvsp[-1].ExprRes));}
+#line 1385 "y.tab.c"
     break;
 
-  case 18: /* BExpr: BExpr OR BExpr1  */
+  case 16: /* Stmt: IF '(' BExpr ')' '{' StmtSeq '}'  */
 #line 87 "ExprEval.y"
-                                {(yyval.ExprRes) = doOr((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1390 "y.tab.c"
+                                                 {(yyval.InstrSeq) = doIf((yyvsp[-4].ExprRes), (yyvsp[-1].InstrSeq));}
+#line 1391 "y.tab.c"
     break;
 
-  case 19: /* BExpr: BExpr1  */
+  case 17: /* Stmt: IF '(' BExpr ')' '{' StmtSeq '}' ELSE '{' StmtSeq '}'  */
 #line 88 "ExprEval.y"
-                       {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
-#line 1396 "y.tab.c"
+                                                                      {(yyval.InstrSeq) = doIfElse((yyvsp[-8].ExprRes), (yyvsp[-5].InstrSeq), (yyvsp[-1].InstrSeq));}
+#line 1397 "y.tab.c"
     break;
 
-  case 20: /* BExpr1: BExpr1 AND BExpr2  */
+  case 18: /* Stmt: WHILE '(' BExpr ')' '{' StmtSeq '}'  */
 #line 89 "ExprEval.y"
-                                  {(yyval.ExprRes) = doAnd((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1402 "y.tab.c"
+                                                    {(yyval.InstrSeq) = doWhile((yyvsp[-4].ExprRes), (yyvsp[-1].InstrSeq));}
+#line 1403 "y.tab.c"
     break;
 
-  case 21: /* BExpr1: BExpr2  */
+  case 19: /* ExprList: Expr ',' ExprList  */
 #line 90 "ExprEval.y"
-                       {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
-#line 1408 "y.tab.c"
+                                  {printf("Doing appendExprNode\n");(yyval.ExprResList) = appendExprNode((yyvsp[-2].ExprRes), (yyvsp[0].ExprResList));}
+#line 1409 "y.tab.c"
     break;
 
-  case 22: /* BExpr2: BExpr2 LT BExpr3  */
+  case 20: /* ExprList: Expr  */
 #line 91 "ExprEval.y"
-                                       {(yyval.ExprRes) = doLT((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1414 "y.tab.c"
+                     {printf("Doing createExprNode\n");(yyval.ExprResList) = createExprNode((yyvsp[0].ExprRes));}
+#line 1415 "y.tab.c"
     break;
 
-  case 23: /* BExpr2: BExpr2 LTE BExpr3  */
+  case 21: /* BExpr: BExpr OR BExpr1  */
 #line 92 "ExprEval.y"
-                                  {(yyval.ExprRes) = doLTE((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1420 "y.tab.c"
+                                {(yyval.ExprRes) = doOr((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1421 "y.tab.c"
     break;
 
-  case 24: /* BExpr2: BExpr2 GT BExpr3  */
+  case 22: /* BExpr: BExpr1  */
 #line 93 "ExprEval.y"
-                                 {(yyval.ExprRes) = doGT((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1426 "y.tab.c"
+                       {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
+#line 1427 "y.tab.c"
     break;
 
-  case 25: /* BExpr2: BExpr2 GTE BExpr3  */
+  case 23: /* BExpr1: BExpr1 AND BExpr2  */
 #line 94 "ExprEval.y"
-                                  {(yyval.ExprRes) = doGTE((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1432 "y.tab.c"
+                                  {(yyval.ExprRes) = doAnd((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1433 "y.tab.c"
     break;
 
-  case 26: /* BExpr2: BExpr3  */
+  case 24: /* BExpr1: BExpr2  */
 #line 95 "ExprEval.y"
                        {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
-#line 1438 "y.tab.c"
+#line 1439 "y.tab.c"
     break;
 
-  case 27: /* BExpr3: BExpr3 EQ Expr  */
+  case 25: /* BExpr2: BExpr2 LT BExpr3  */
 #line 96 "ExprEval.y"
-                               {(yyval.ExprRes) = doEq((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1444 "y.tab.c"
+                                       {(yyval.ExprRes) = doLT((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1445 "y.tab.c"
     break;
 
-  case 28: /* BExpr3: BExpr3 NEQ Expr  */
+  case 26: /* BExpr2: BExpr2 LTE BExpr3  */
 #line 97 "ExprEval.y"
-                                {(yyval.ExprRes) = doNotEq((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1450 "y.tab.c"
+                                  {(yyval.ExprRes) = doLTE((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1451 "y.tab.c"
     break;
 
-  case 29: /* BExpr3: Expr  */
+  case 27: /* BExpr2: BExpr2 GT BExpr3  */
 #line 98 "ExprEval.y"
-                     {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
-#line 1456 "y.tab.c"
+                                 {(yyval.ExprRes) = doGT((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1457 "y.tab.c"
     break;
 
-  case 30: /* Expr: Expr '+' Term  */
+  case 28: /* BExpr2: BExpr2 GTE BExpr3  */
 #line 99 "ExprEval.y"
-                                              {(yyval.ExprRes) = doAdd((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes)); }
-#line 1462 "y.tab.c"
+                                  {(yyval.ExprRes) = doGTE((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1463 "y.tab.c"
     break;
 
-  case 31: /* Expr: Expr '-' Term  */
+  case 29: /* BExpr2: BExpr3  */
 #line 100 "ExprEval.y"
-                              {(yyval.ExprRes) = doSub((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1468 "y.tab.c"
-    break;
-
-  case 32: /* Expr: Term  */
-#line 101 "ExprEval.y"
-                     {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
-#line 1474 "y.tab.c"
-    break;
-
-  case 33: /* Term: Term '*' Term2  */
-#line 102 "ExprEval.y"
-                                        {(yyval.ExprRes) = doMult((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1480 "y.tab.c"
-    break;
-
-  case 34: /* Term: Term '/' Term2  */
-#line 103 "ExprEval.y"
-                               {(yyval.ExprRes) = doDiv((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1486 "y.tab.c"
-    break;
-
-  case 35: /* Term: Term '%' Term2  */
-#line 104 "ExprEval.y"
-                               {(yyval.ExprRes) = doMod((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1492 "y.tab.c"
-    break;
-
-  case 36: /* Term: Term2  */
-#line 105 "ExprEval.y"
-                      { (yyval.ExprRes) = (yyvsp[0].ExprRes); }
-#line 1498 "y.tab.c"
-    break;
-
-  case 37: /* Term2: '-' Term2  */
-#line 106 "ExprEval.y"
-                          {(yyval.ExprRes) = doUnaryMin((yyvsp[0].ExprRes));}
-#line 1504 "y.tab.c"
-    break;
-
-  case 38: /* Term2: NOT Term2  */
-#line 107 "ExprEval.y"
-                          {(yyval.ExprRes) = doNot((yyvsp[0].ExprRes));}
-#line 1510 "y.tab.c"
-    break;
-
-  case 39: /* Term2: Factor '^' Term2  */
-#line 108 "ExprEval.y"
-                                 {(yyval.ExprRes) = doExponent((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
-#line 1516 "y.tab.c"
-    break;
-
-  case 40: /* Term2: Factor  */
-#line 109 "ExprEval.y"
                        {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
-#line 1522 "y.tab.c"
+#line 1469 "y.tab.c"
     break;
 
-  case 41: /* Factor: IntLit  */
+  case 30: /* BExpr3: BExpr3 EQ Expr  */
+#line 101 "ExprEval.y"
+                               {(yyval.ExprRes) = doEq((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1475 "y.tab.c"
+    break;
+
+  case 31: /* BExpr3: BExpr3 NEQ Expr  */
+#line 102 "ExprEval.y"
+                                {(yyval.ExprRes) = doNotEq((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1481 "y.tab.c"
+    break;
+
+  case 32: /* BExpr3: Expr  */
+#line 103 "ExprEval.y"
+                     {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
+#line 1487 "y.tab.c"
+    break;
+
+  case 33: /* Expr: Expr '+' Term  */
+#line 104 "ExprEval.y"
+                                              {(yyval.ExprRes) = doAdd((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1493 "y.tab.c"
+    break;
+
+  case 34: /* Expr: Expr '-' Term  */
+#line 105 "ExprEval.y"
+                              {(yyval.ExprRes) = doSub((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1499 "y.tab.c"
+    break;
+
+  case 35: /* Expr: Term  */
+#line 106 "ExprEval.y"
+                     {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
+#line 1505 "y.tab.c"
+    break;
+
+  case 36: /* Term: Term '*' Term2  */
+#line 107 "ExprEval.y"
+                                        {(yyval.ExprRes) = doMult((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1511 "y.tab.c"
+    break;
+
+  case 37: /* Term: Term '/' Term2  */
+#line 108 "ExprEval.y"
+                               {(yyval.ExprRes) = doDiv((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1517 "y.tab.c"
+    break;
+
+  case 38: /* Term: Term '%' Term2  */
+#line 109 "ExprEval.y"
+                               {(yyval.ExprRes) = doMod((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1523 "y.tab.c"
+    break;
+
+  case 39: /* Term: Term2  */
 #line 110 "ExprEval.y"
-                               {(yyval.ExprRes) = doIntLit(yytext);}
-#line 1528 "y.tab.c"
+                      { (yyval.ExprRes) = (yyvsp[0].ExprRes); }
+#line 1529 "y.tab.c"
     break;
 
-  case 42: /* Factor: BoolLit  */
+  case 40: /* Term2: '-' Term2  */
 #line 111 "ExprEval.y"
-                        {(yyval.ExprRes) = doBoolLit(yytext);}
-#line 1534 "y.tab.c"
+                          {(yyval.ExprRes) = doUnaryMin((yyvsp[0].ExprRes));}
+#line 1535 "y.tab.c"
     break;
 
-  case 43: /* Factor: StringLit  */
+  case 41: /* Term2: NOT Term2  */
 #line 112 "ExprEval.y"
-                          {doStringLit(yytext);}
-#line 1540 "y.tab.c"
+                          {(yyval.ExprRes) = doNot((yyvsp[0].ExprRes));}
+#line 1541 "y.tab.c"
     break;
 
-  case 44: /* Factor: Id  */
+  case 42: /* Term2: Factor '^' Term2  */
 #line 113 "ExprEval.y"
-                   {(yyval.ExprRes) = doRval((yyvsp[0].string)); }
-#line 1546 "y.tab.c"
+                                 {(yyval.ExprRes) = doExponent((yyvsp[-2].ExprRes), (yyvsp[0].ExprRes));}
+#line 1547 "y.tab.c"
     break;
 
-  case 45: /* IdentList: Id ',' IdentList  */
+  case 43: /* Term2: Factor  */
 #line 114 "ExprEval.y"
-                                 {(yyval.IdList) = appendIdNode((yyvsp[0].IdList), (yyvsp[-2].string));}
-#line 1552 "y.tab.c"
+                       {(yyval.ExprRes) = (yyvsp[0].ExprRes);}
+#line 1553 "y.tab.c"
     break;
 
-  case 46: /* IdentList: Id  */
+  case 44: /* Factor: IntLit  */
 #line 115 "ExprEval.y"
-                   {(yyval.IdList) = createIdNode((yyvsp[0].string));}
-#line 1558 "y.tab.c"
+                               {(yyval.ExprRes) = doIntLit(yytext);}
+#line 1559 "y.tab.c"
     break;
 
-  case 47: /* Id: Ident  */
+  case 45: /* Factor: BoolLit  */
 #line 116 "ExprEval.y"
+                        {(yyval.ExprRes) = doBoolLit(yytext);}
+#line 1565 "y.tab.c"
+    break;
+
+  case 46: /* Factor: StringLit  */
+#line 117 "ExprEval.y"
+                          {doStringLit(yytext);}
+#line 1571 "y.tab.c"
+    break;
+
+  case 47: /* Factor: Id  */
+#line 118 "ExprEval.y"
+                   {(yyval.ExprRes) = doRval((yyvsp[0].string)); }
+#line 1577 "y.tab.c"
+    break;
+
+  case 48: /* IdentList: Id ',' IdentList  */
+#line 119 "ExprEval.y"
+                                 {(yyval.IdList) = appendIdNode((yyvsp[0].IdList), (yyvsp[-2].string));}
+#line 1583 "y.tab.c"
+    break;
+
+  case 49: /* IdentList: Id  */
+#line 120 "ExprEval.y"
+                   {(yyval.IdList) = createIdNode((yyvsp[0].string));}
+#line 1589 "y.tab.c"
+    break;
+
+  case 50: /* Id: Ident  */
+#line 121 "ExprEval.y"
                                       { (yyval.string) = strdup(yytext);}
-#line 1564 "y.tab.c"
+#line 1595 "y.tab.c"
     break;
 
 
-#line 1568 "y.tab.c"
+#line 1599 "y.tab.c"
 
       default: break;
     }
@@ -1757,7 +1788,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 118 "ExprEval.y"
+#line 123 "ExprEval.y"
 
 
 int yyerror(char *s)  {

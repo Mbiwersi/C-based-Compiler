@@ -89,14 +89,12 @@ if(num1 == 10){
     printString("num2 is not 10\n");
 }
 print num2;
-read(num1, num2, num3, num4, num5);
-printString("num1 value ");
-print num1;
-printString("num2 value ");
-print num2;
-printString("num3 value ");
-print num3;
-printString("num4 value ");
-print num4;
-printString("num5 value ");
-print num5;
+num1 = 1;
+num2 = 2;
+print(num1*2, num2*5);
+num1 = 5;
+num2 = 6;
+print(num1, num2);
+num4 = false;
+num5 = true;
+print(num4 && num5, num5 || num4);

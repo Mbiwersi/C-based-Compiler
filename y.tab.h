@@ -60,7 +60,7 @@ extern int yydebug;
     BoolLit = 261,                 /* BoolLit  */
     Bool = 262,                    /* Bool  */
     Read = 263,                    /* Read  */
-    Write = 264,                   /* Write  */
+    Print = 264,                   /* Print  */
     Printlines = 265,              /* Printlines  */
     Printspaces = 266,             /* Printspaces  */
     PrintString = 267,             /* PrintString  */
@@ -91,7 +91,7 @@ extern int yydebug;
 #define BoolLit 261
 #define Bool 262
 #define Read 263
-#define Write 264
+#define Print 264
 #define Printlines 265
 #define Printspaces 266
 #define PrintString 267
@@ -118,10 +118,11 @@ union YYSTYPE
   long val;
   char * string;
   struct ExprRes * ExprRes;
+  struct ExprResList * ExprResList;
   struct InstrSeq * InstrSeq;
   struct IdList * IdList;
 
-#line 125 "y.tab.h"
+#line 126 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

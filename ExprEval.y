@@ -24,6 +24,7 @@ extern SymTab *stringTable;
   long val;
   char * string;
   struct ExprRes * ExprRes;
+  struct ExprResList * ExprResList;
   struct InstrSeq * InstrSeq;
   struct IdList * IdList;
 }
@@ -34,6 +35,7 @@ extern SymTab *stringTable;
 %type <ExprRes> Term
 %type <ExprRes> Term2
 %type <ExprRes> Expr
+%type <ExprResList> ExprList
 %type <InstrSeq> StmtSeq
 %type <InstrSeq> Stmt
 %type <ExprRes> BExpr
@@ -48,7 +50,7 @@ extern SymTab *stringTable;
 %token BoolLit
 %token Bool
 %token Read
-%token Write
+%token Print
 %token Printlines
 %token Printspaces
 %token PrintString
@@ -75,7 +77,8 @@ Dec			      :	Int Id ';' {enterName(table, $2);};
               | Bool Id ';' {enterName(table, $2);};
 StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
               |	{$$ = NULL;} ;
-Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
+Stmt			    :	Print Expr ';' {$$ = doPrint($2, "_nl");};
+              | Print '(' ExprList ')' ';' {printf("Doing printList\n");$$ = doPrintList($3);};
               | Read '(' IdentList ')' ';' {$$ = doRead($3);};
               | Printlines '(' Expr ')' ';' {$$ = doPrintLines($3);};
               | Printspaces '(' Expr ')' ';' {$$ = doPrintSpaces($3);};
@@ -84,6 +87,8 @@ Stmt			    :	Write Expr ';' {$$ = doPrint($2);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
               | IF '(' BExpr ')' '{' StmtSeq '}' ELSE '{' StmtSeq '}' {$$ = doIfElse($3, $6, $10);};
               | WHILE '(' BExpr ')' '{' StmtSeq '}' {$$ = doWhile($3, $6);};
+ExprList      : Expr ',' ExprList {printf("Doing appendExprNode\n");$$ = appendExprNode($1, $3);};
+              | Expr {printf("Doing createExprNode\n");$$ = createExprNode($1);};
 BExpr         : BExpr OR BExpr1 {$$ = doOr($1, $3);};
               | BExpr1 {$$ = $1;};
 BExpr1        : BExpr1 AND BExpr2 {$$ = doAnd($1, $3);};
@@ -96,7 +101,7 @@ BExpr2		    : BExpr2 LT BExpr3 {$$ = doLT($1, $3);};
 BExpr3        :	BExpr3 EQ Expr {$$ = doEq($1, $3);};
               | BExpr3 NEQ Expr {$$ = doNotEq($1, $3);};
               | Expr {$$ = $1;};
-Expr			    :	Expr '+' Term {$$ = doAdd($1, $3); };
+Expr			    :	Expr '+' Term {$$ = doAdd($1, $3);};
               | Expr '-' Term {$$ = doSub($1, $3);};
               |	Term {$$ = $1;};
 Term		      :	Term '*' Term2	{$$ = doMult($1, $3);};

@@ -828,7 +828,7 @@ YY_RULE_SETUP
 case 8:
 YY_RULE_SETUP
 #line 27 "lex1.l"
-{return Write;}
+{return Print;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP

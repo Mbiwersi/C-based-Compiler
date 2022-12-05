@@ -24,7 +24,7 @@ int					                {return Int;}
 bool                        {return Bool;}
 true                        {return BoolLit;}
 false                       {return BoolLit;}
-print					              {return Write;}
+print					              {return Print;}
 printlines                  {return Printlines;}
 printspaces                 {return Printspaces;}
 printString                 {return PrintString;}

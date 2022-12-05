@@ -89,16 +89,14 @@
 89.     printString("num2 is not 10\n");
 90. }
 91. print num2;
-92. read(num1, num2, num3, num4, num5);
-93. printString("num1 value ");
-94. print num1;
-95. printString("num2 value ");
-96. print num2;
-97. printString("num3 value ");
-98. print num3;
-99. printString("num4 value ");
-100. print num4;
-101. printString("num5 value ");
-102. print num5;
-                ^
-Illegal Character in lex
+92. num1 = 1;
+93. num2 = 2;
+94. print(num1*2, num2*5);
+95. num1 = 5;
+96. num2 = 6;
+97. print(num1, num2);
+98. num4 = false;
+99. num5 = true;
+100. print(num4 && num5, num5 || num4);
+                 ^
+Illegal Character in YACC

@@ -219,7 +219,7 @@ struct ExprRes * doExponent(struct ExprRes * Res1, struct ExprRes * Res2) {
   return Res1;
 }
 
-struct InstrSeq * doPrint(struct ExprRes * Expr) { 
+struct InstrSeq * doPrint(struct ExprRes * Expr, char * printAfter) { 
 
   struct InstrSeq *code;
     
@@ -230,7 +230,7 @@ struct InstrSeq * doPrint(struct ExprRes * Expr) {
   AppendSeq(code,GenInstr(NULL,"syscall",NULL,NULL,NULL));
 
   AppendSeq(code,GenInstr(NULL,"li","$v0","4",NULL));
-  AppendSeq(code,GenInstr(NULL,"la","$a0","_nl",NULL));
+  AppendSeq(code,GenInstr(NULL,"la","$a0",printAfter,NULL));
   AppendSeq(code,GenInstr(NULL,"syscall",NULL,NULL,NULL));
 
   ReleaseTmpReg(Expr->Reg);
@@ -265,6 +265,7 @@ extern struct InstrSeq * doRead(struct IdList* list) {
   return code;
 }
 
+// might need to free up the node after done with it
 extern struct IdList * createIdNode(char * varName) {
   struct IdList * node;
 
@@ -275,12 +276,42 @@ extern struct IdList * createIdNode(char * varName) {
   return node;
 }
 
+// might need to free up the list after done with it
 extern struct IdList * appendIdNode(struct IdList * list, char * varName) {
   struct IdList * newNode = createIdNode(varName);
   newNode->Next = list;
 
   return newNode;
 }
+
+extern struct ExprResList * createExprNode(struct ExprRes * Res1) {
+  struct ExprResList * node;
+
+  node = (struct ExprResList *) malloc(sizeof(struct ExprResList));
+  node->Expr = Res1;
+  node->Next = NULL;
+
+  return node;
+}
+extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprResList * list) {
+  struct ExprResList * newNode = createExprNode(Res1);
+  newNode->Next = list;
+  return newNode;
+}
+
+extern struct InstrSeq * doPrintList(struct ExprResList * list) {
+  struct InstrSeq *code;
+  printf("Got here\n");
+  code = doPrint(list->Expr, "_space");
+  list = list->Next;
+  printf("Got here 2\n");
+  while(list != NULL){
+    AppendSeq(code, doPrint(list->Expr, "_space"));
+    list = list->Next;
+  }
+  return code;
+}
+
 
 extern struct InstrSeq * doPrintLines(struct ExprRes * Expr) {
   struct InstrSeq *code;

@@ -34,8 +34,9 @@ extern struct ExprRes * doDiv(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes * doMod(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes * doUnaryMin(struct ExprRes * Res1);
 extern struct ExprRes * doExponent(struct ExprRes * Res1, struct ExprRes * Res2);
-extern struct InstrSeq *  doPrint(struct ExprRes * Expr);
+extern struct InstrSeq *  doPrint(struct ExprRes * Expr, char * printAfter);
 extern struct InstrSeq *  doRead(struct IdList* list);
+extern struct InstrSeq * doPrintList(struct ExprResList * list);
 extern struct InstrSeq * doPrintLines(struct ExprRes * Expr);
 extern struct InstrSeq * doPrintSpaces(struct ExprRes * Expr);
 extern struct InstrSeq * doPrintString();
@@ -55,5 +56,8 @@ extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq);
 
 extern struct IdList * createIdNode(char * varName);
 extern struct IdList * appendIdNode(struct IdList * list, char * varName);
+
+extern struct ExprResList * createExprNode(struct ExprRes * Res1);
+extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprResList * list);
 
 extern void	Finish(struct InstrSeq *Code);
