@@ -35,3 +35,4 @@ extern struct InstrSeq * RestoreSeq();
 
 extern char *						 Imm(int Val);
 extern char *						 RegOff(int Offset, char * Reg);
+extern char *            RegOffwReg(char* OffsetReg, char * Reg);

@@ -6,6 +6,7 @@ extern int yyparse();
 
 SymTab *table;
 SymTab *stringTable;
+SymTab *arrayTable;
 //SymTab *ProcSymTab;
 //int inProc =0;
 FILE *aFile;
@@ -15,6 +16,9 @@ int main(int argc, char * argv[]) {
 
 	// create the string table for string literals
 	stringTable = createSymTab(33);
+
+	// create the array table
+	arrayTable = createSymTab(33);
 
 	//assumes there is a listing file
 	openFiles(argv[1], argv[2]);

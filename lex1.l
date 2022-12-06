@@ -54,6 +54,8 @@ read                        {return Read;}
 \(					                {return '(';}
 \)					                {return ')';}
 \,                          {return ',';}
+\[                          {return '[';}
+\]                          {return ']';}
 
 [ ]				{}
 \t				{}

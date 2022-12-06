@@ -15,6 +15,7 @@ void dumpTable();
 
 extern SymTab *table;
 extern SymTab *stringTable;
+extern SymTab *arrayTable;
 
 
 %}
@@ -73,8 +74,9 @@ extern SymTab *stringTable;
 Prog			    :	Declarations StmtSeq {Finish($2);};
 Declarations	:	Dec Declarations { };
               |	{ };
-Dec			      :	Int Id ';' {enterName(table, $2);};
-              | Bool Id ';' {enterName(table, $2);};
+Dec			      :	Int Id ';' {enterInt($2);};
+              | Bool Id ';' {enterBool($2);};
+              | Int Id '[' IntLit {intArrayDec($2, yytext);} ']' ';' {};
 StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
               |	{$$ = NULL;} ;
 Stmt			    :	Print Expr ';' {$$ = doPrint($2, "_nl");};
@@ -84,6 +86,7 @@ Stmt			    :	Print Expr ';' {$$ = doPrint($2, "_nl");};
               | Printspaces '(' Expr ')' ';' {$$ = doPrintSpaces($3);};
               | PrintString '(' Expr  ')' ';' {$$ = doPrintString();};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
+              | Id '[' Expr ']' '=' BExpr ';' {$$ = doArrayAssign($1, $3, $6);};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
               | IF '(' BExpr ')' '{' StmtSeq '}' ELSE '{' StmtSeq '}' {$$ = doIfElse($3, $6, $10);};
               | WHILE '(' BExpr ')' '{' StmtSeq '}' {$$ = doWhile($3, $6);};
@@ -118,7 +121,7 @@ Factor		    :	IntLit {$$ = doIntLit(yytext);};
               |	Id {$$ = doRval($1); };
 IdentList     : Id ',' IdentList {$$ = appendIdNode($3, $1);}; 
               | Id {$$ = createIdNode($1);};
-Id			      : Ident { $$ = strdup(yytext);}
+Id			      : Ident {$$ = strdup(yytext);}
  
 %%
 

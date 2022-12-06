@@ -168,6 +168,7 @@ void printTab(SymTab* s){
         printf("Row(%d) = ", i);
         while(current != NULL){
             printf(current->name);
+            printf("(%s)",current->attribute);
             printf(", ");
             current = current->next;
         }

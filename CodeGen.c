@@ -178,4 +178,7 @@ char * RegOff(int Offset, char * Reg) {
   return Buf;
 }
 
-
+char * RegOffwReg(char* OffsetReg, char * Reg) {
+  sprintf(Buf,"%s(%s)",Reg,OffsetReg);
+  return Buf;
+}

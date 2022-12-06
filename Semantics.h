@@ -27,6 +27,7 @@ extern struct ExprRes * doBoolLit(char * bool);
 extern void doStringLit(char * string);
 extern struct ExprRes *  doRval(char * name);
 extern struct InstrSeq *  doAssign(char * name,  struct ExprRes * Res1);
+extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, struct ExprRes * result);
 extern struct ExprRes *  doAdd(struct ExprRes * Res1,  struct ExprRes * Res2);
 extern struct ExprRes * doSub(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes *  doMult(struct ExprRes * Res1,  struct ExprRes * Res2);
@@ -59,5 +60,10 @@ extern struct IdList * appendIdNode(struct IdList * list, char * varName);
 
 extern struct ExprResList * createExprNode(struct ExprRes * Res1);
 extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprResList * list);
+
+extern void intArrayDec(char * id, char * size);
+
+extern void enterInt(char * varName);
+extern void enterBool(char * varName);
 
 extern void	Finish(struct InstrSeq *Code);

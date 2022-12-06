@@ -12,14 +12,13 @@
 #include "IOMngr.h"
 
 extern SymTab *table;
-
-// String table
 extern SymTab *stringTable;
+extern SymTab *arrayTable;
 
 /* Semantics support routines */
 
 struct ExprRes *  doIntLit(char * digits)  { 
-
+  // printf("Doing int Lit of '%s'\n", digits);
   struct ExprRes *res;
   
   res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
@@ -30,6 +29,8 @@ struct ExprRes *  doIntLit(char * digits)  {
 }
 
 struct ExprRes * doBoolLit(char * bool) {
+  // printf("Doing bool Lit of '%s'\n", bool);
+
   struct ExprRes * res;
   res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
   res->Reg = AvailTmpReg();
@@ -60,6 +61,8 @@ void doStringLit(char * string) {
 struct ExprRes *  doRval(char * name)  { 
 
   struct ExprRes *res;
+
+  // printf("Doing Rval name = '%s'\n", name);
   
   if (!findName(table, name)) {
 	  writeIndicator(getCurrentColumnNum());
@@ -224,6 +227,8 @@ struct InstrSeq * doPrint(struct ExprRes * Expr, char * printAfter) {
   struct InstrSeq *code;
     
   code = Expr->Instrs;
+
+  // printf("Doing doPrint tmpRegName(Expr->Reg) = '%s'\n", TmpRegName(Expr->Reg));
   
   AppendSeq(code,GenInstr(NULL,"li","$v0","1",NULL));
   AppendSeq(code,GenInstr(NULL,"move","$a0",TmpRegName(Expr->Reg),NULL));
@@ -293,6 +298,7 @@ extern struct ExprResList * createExprNode(struct ExprRes * Res1) {
 
   return node;
 }
+
 extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprResList * list) {
   struct ExprResList * newNode = createExprNode(Res1);
   newNode->Next = list;
@@ -301,17 +307,14 @@ extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprRes
 
 extern struct InstrSeq * doPrintList(struct ExprResList * list) {
   struct InstrSeq *code;
-  printf("Got here\n");
   code = doPrint(list->Expr, "_space");
   list = list->Next;
-  printf("Got here 2\n");
   while(list != NULL){
     AppendSeq(code, doPrint(list->Expr, "_space"));
     list = list->Next;
   }
   return code;
 }
-
 
 extern struct InstrSeq * doPrintLines(struct ExprRes * Expr) {
   struct InstrSeq *code;
@@ -386,9 +389,8 @@ extern struct InstrSeq * doPrintString() {
 
   char * string = getCurrentName(stringTable);
 
-  if(findName(stringTable, string)){
+  if(findName(stringTable, string)) {
     // write out the string
-
     code = GenInstr(NULL,"li","$v0","4",NULL);
     AppendSeq(code,GenInstr(NULL,"la","$a0",(char *) getCurrentAttr(stringTable),NULL));
     AppendSeq(code,GenInstr(NULL,"syscall",NULL,NULL,NULL));
@@ -417,6 +419,40 @@ struct InstrSeq * doAssign(char *name, struct ExprRes * Expr) {
   free(Expr);
   
   return code;
+}
+
+extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, struct ExprRes * Expr) {
+  struct InstrSeq *code;
+  
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  code = Expr->Instrs;
+  AppendSeq(code, arrayLoc->Instrs);
+
+  // times the index by 4
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(arrayLoc->Reg), "4"));
+  AppendSeq(code, GenInstr(NULL, "sw", TmpRegName(Expr->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(Expr->Reg);
+  ReleaseTmpReg(offsetReg);
+  ReleaseTmpReg(arrayLoc->Reg);
+  free(Expr);
+  free(arrayLoc);
+  return code;
+}
+
+extern void enterInt(char * varName) {
+  enterName(table, varName);
+  setCurrentAttr(table, "int");
+}
+extern void enterBool(char * varName) {
+  enterName(table, varName);
+  setCurrentAttr(table, "bool");
 }
 
 extern struct ExprRes * doEq(struct ExprRes * Res1,  struct ExprRes * Res2) {
@@ -621,6 +657,18 @@ extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq) {
   return seq2;
 }
 
+extern void intArrayDec(char * id, char * size) {
+  printf("int array '%s'\n", id);
+  printf("Size of array %d\n", atoi(size));
+
+  char arraySize[10];
+  int newSize = atoi(size)*4;
+  snprintf(arraySize, 10, "%d", newSize);
+
+  enterName(table, id);
+  setCurrentAttr(table, strdup(arraySize));
+}
+
 /*
 
 extern struct InstrSeq * doIf(struct ExprRes *res1, struct ExprRes *res2, struct InstrSeq * seq) {
@@ -670,7 +718,11 @@ void Finish(struct InstrSeq *Code) {
 
  hasMore = startIterator(table);
  while (hasMore) {
-	AppendSeq(code,GenInstr((char *) getCurrentName(table),".word","0",NULL,NULL));
+	AppendSeq(code, GenInstr(
+                            (char *) getCurrentName(table),
+                            (strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 ) ? ".word" : ".space",
+                            (strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 ) ? "0" : getCurrentAttr(table)
+                            ,NULL,NULL));
   hasMore = nextEntry(table);
  }
   

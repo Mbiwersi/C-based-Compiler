@@ -384,6 +384,18 @@ L32:
 	li		$v0, 4
 	la		$a0, _space
 	syscall	
+	li		$t5, 1
+	li		$t1, 5
+	mul		$t6, $t1, 4
+	sw		$t5, num6($t6)
+	li		$t5, 7
+	li		$t1, 2
+	mul		$t6, $t1, 4
+	sw		$t5, num6($t6)
+	li		$t5, 5
+	li		$t1, 7
+	mul		$t6, $t1, 4
+	sw		$t5, num6($t6)
 	li		$v0, 10
 	syscall	
 	.data	
@@ -407,3 +419,4 @@ num2:	.word		0
 num3:	.word		0
 num4:	.word		0
 num5:	.word		0
+num6:	.space		40
