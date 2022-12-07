@@ -119,6 +119,7 @@ Factor		    :	IntLit {$$ = doIntLit(yytext);};
               | BoolLit {$$ = doBoolLit(yytext);};
               | StringLit {doStringLit(yytext);};
               |	Id {$$ = doRval($1); };
+              | Id '[' BExpr ']' {printf("id = '%s'\n", $1);$$ = doArrayVal($1, $3);};
 IdentList     : Id ',' IdentList {$$ = appendIdNode($3, $1);}; 
               | Id {$$ = createIdNode($1);};
 Id			      : Ident {$$ = strdup(yytext);}

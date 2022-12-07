@@ -1,104 +1,22 @@
-int num1;
-int num2;
-int num3;
-bool num4;
-bool num5;
-int num6[10];
-num1 = 10;
-num2 = 20;
-num3 = 13;
-num4 = true;
-if (num2+20+num2 == 3*num2) {
- print num1;
-}
-num1 = num1 - num2;
-num2 = num2/4;
-num2 = num2%3;
-num3 = num3%5;
-num3 = -num3;
-num3 = -num3;
-num2 = 2^7;
-num2 = num2^0;
-num4 = 1 < 0;
-num4 = 0 < 1;
-num4 = num4 < 1;
-num5 = true;
-num5 = false;
-num5 = 1 > 0;
-num4 = num5;
-num4 = 1 <= 1;
-num4 = 2 <= 1;
-num5 = false;
-num5 = 1 >= 1;
-num5 = 1 >= 2;
-num5 = false;
-num5 = 1 == 1;
-num5 = 1 != 1;
-num5 = false;
-num5 = !num5;
-num5 = !num5;
-num5 = true;
-num5 = num5 && num5;
-num5 = num5 && false;
-num5 = false;
-print num5;
-num5 = num5 || true;
-print num5;
-num5 = num5 || false;
-print num5;
-num5 = false || false;
-print num5;
-num5 = true || num5;
-printlines(1);
-print num5;
-printspaces(10);
-printString("\nHello world\n");
-printString("It works\n");
-printString("Hello world\n");
-printString("Testing newlines\n");
-num1 = 1;
-while(num1 <= 5) {
-    printString("While loop\n");
-    num1 = num1 + 1;
-}
-num5 = true;
-num1 = 1;
-while(num5) {
-    if(num1 == 5){
-        num5 = false;
+int n[30];
+int i;
+int j;
+int count;
+int temp;
+i = 1;
+n[0] = 1;
+n[1] = 2;
+n[2] = 3;
+n[3] = 4;
+n[4] = 5;
+count = 5;
+    while (i < count) {
+        j = i-1;
+        temp = n[i];
+        while (j >= 0 && n[j] < temp) {
+            n[j+1] = n[j];
+            j = j - 1;
+        }
+        n[j+1] = temp;
+        i = i + 1;
     }
-    printString("if while statement test\n");
-    num1 = num1 + 1;
-}
-num5 = true;
-if(num5){
-    printString("Condition is true\n");
-}
-else {
-    printString("Condition is false\n");
-}
-num5 = false;
-if(num5){
-    printString("Condition is true\n");
-}
-else {
-    printString("Condition is false\n");
-}
-if(num1 == 10){
-    printString("num1 is 10\n");
-}else{
-    printString("num2 is not 10\n");
-}
-print num2;
-num1 = 1;
-num2 = 2;
-print(num1*2, num2*5);
-num1 = 5;
-num2 = 6;
-print(num1, num2);
-num4 = false;
-num5 = true;
-print(num4 && num5, num5 || num4, true && false);
-num6[5] = 1;
-num6[2] = 7;
-num6[7] = 5;

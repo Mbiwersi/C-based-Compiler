@@ -75,6 +75,34 @@ struct ExprRes *  doRval(char * name)  {
   return res;
 }
 
+extern struct ExprRes * doArrayVal(char * name, struct ExprRes * index) {
+  printf("Doing array val of '%s'\n",name);
+
+  struct ExprRes *res;
+
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
+  res->Reg = AvailTmpReg();
+  res->Instrs = index->Instrs;
+
+  // calculate regoff
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  AppendSeq(res->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(index->Reg), "4"));
+  AppendSeq(res->Instrs, GenInstr(NULL, "lw", TmpRegName(res->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(index->Reg);
+  ReleaseTmpReg(offsetReg);
+  // ReleaseTmpReg(res->Reg);
+  free(index);
+
+  return res;
+}
+
 struct ExprRes * doAdd(struct ExprRes * Res1, struct ExprRes * Res2)  { 
 
   int reg;
@@ -235,7 +263,7 @@ struct InstrSeq * doPrint(struct ExprRes * Expr, char * printAfter) {
   AppendSeq(code,GenInstr(NULL,"syscall",NULL,NULL,NULL));
 
   AppendSeq(code,GenInstr(NULL,"li","$v0","4",NULL));
-  AppendSeq(code,GenInstr(NULL,"la","$a0",printAfter,NULL));
+  AppendSeq(code,GenInstr(NULL,"la","$a0","_space",NULL));
   AppendSeq(code,GenInstr(NULL,"syscall",NULL,NULL,NULL));
 
   ReleaseTmpReg(Expr->Reg);
@@ -429,8 +457,8 @@ extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, s
 		writeMessage("Undeclared variable");
   }
 
-  code = Expr->Instrs;
-  AppendSeq(code, arrayLoc->Instrs);
+  code = arrayLoc->Instrs; //////////////////////// FOUND BUG
+  AppendSeq(code, Expr->Instrs); ////////////////// THESE WHERE SWAPPED BEFORE, FIXED NOW
 
   // times the index by 4
   int offsetReg;
@@ -658,8 +686,8 @@ extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq) {
 }
 
 extern void intArrayDec(char * id, char * size) {
-  printf("int array '%s'\n", id);
-  printf("Size of array %d\n", atoi(size));
+  // printf("int array '%s'\n", id);
+  // printf("Size of array %d\n", atoi(size));
 
   char arraySize[10];
   int newSize = atoi(size)*4;
@@ -702,6 +730,15 @@ void Finish(struct InstrSeq *Code) {
   AppendSeq(code, GenInstr(NULL, "li", "$v0", "10", NULL)); 
   AppendSeq(code, GenInstr(NULL,"syscall",NULL,NULL,NULL));
   AppendSeq(code,GenInstr(NULL,".data",NULL,NULL,NULL));
+
+  // allocate space for arrays
+  hasMore = startIterator(table);
+  while (hasMore) {
+    if(!(strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 )) {
+      AppendSeq(code, GenInstr((char *) getCurrentName(table),".space", getCurrentAttr(table),NULL,NULL));
+    }
+    hasMore = nextEntry(table);
+  }
   AppendSeq(code,GenInstr(NULL,".align","4",NULL,NULL));
   AppendSeq(code,GenInstr("_nl",".asciiz","\"\\n\"",NULL,NULL));
   AppendSeq(code,GenInstr("_space",".asciiz","\" \"",NULL,NULL));
@@ -718,11 +755,9 @@ void Finish(struct InstrSeq *Code) {
 
  hasMore = startIterator(table);
  while (hasMore) {
-	AppendSeq(code, GenInstr(
-                            (char *) getCurrentName(table),
-                            (strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 ) ? ".word" : ".space",
-                            (strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 ) ? "0" : getCurrentAttr(table)
-                            ,NULL,NULL));
+  if((strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 )) {
+    AppendSeq(code, GenInstr((char *) getCurrentName(table),".word","0",NULL,NULL));
+  }
   hasMore = nextEntry(table);
  }
   

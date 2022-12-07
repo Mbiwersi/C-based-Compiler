@@ -15,6 +15,7 @@ letter [A-Za-z]
 digit [0-9]
 space [ ]
 nl [\\\n]
+all [\=|\+|\/|\*|\^|\%|\.|\,|\!|\&|\-|\:|\(|\)]
 
 %%
 if					                {return IF;}
@@ -31,7 +32,7 @@ printString                 {return PrintString;}
 read                        {return Read;}
 {letter}({letter}|{digit})*	{return Ident;}
 {digit}{digit}*		          {return IntLit;}
-\"({letter}|{digit}|{space}|{nl})*\"     {return StringLit;}
+\"({letter}|{digit}|{space}|{nl}|{all})*\"     {return StringLit;}
 \=\=					              {return EQ;}
 \&\&                        {return AND;}
 \|\|                        {return OR;}

@@ -1,0 +1,15 @@
+t1*
+t2*
+t3*
+t4 - ask about ()
+t6*
+t7*
+t8* - ask about reading in array "read(numbers[i])"
+t9 - ask about wrong values
+t11 - t17 - functions
+t18 - booleans, ask about ()
+t19 - 2D array
+t20 - 2D array
+
+
+check array assign, check free assignments

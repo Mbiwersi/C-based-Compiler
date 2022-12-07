@@ -26,6 +26,7 @@ extern struct ExprRes *  doIntLit(char * digits);
 extern struct ExprRes * doBoolLit(char * bool);
 extern void doStringLit(char * string);
 extern struct ExprRes *  doRval(char * name);
+extern struct ExprRes * doArrayVal(char * name, struct ExprRes * index);
 extern struct InstrSeq *  doAssign(char * name,  struct ExprRes * Res1);
 extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, struct ExprRes * result);
 extern struct ExprRes *  doAdd(struct ExprRes * Res1,  struct ExprRes * Res2);
