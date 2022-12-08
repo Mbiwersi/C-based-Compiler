@@ -1,14 +1,41 @@
-2. void function1(){
-3.     printString("Function1 call\n");
-4. }
-5. void function2(){
-6.     printString("Function2 call\n");
-7. }
-8. void function3(){
-9.     printString("Function3 call\n");
-10. }
-11. function1();
-12. function2();
-13. function3();
-                ^
-Illegal Character in lex
+1. int numbers[30];
+2. int count;
+3. int i;
+4. int j;
+5. int temp;
+6. void readNums() {
+7.     printString("Enter the number of ints (30 or less) in the array: ");
+8.     read(count);
+9.     i = 0;
+10.     while (i < count) {
+11.         printString("Enter an int: ");
+12.         read(temp);
+13.         numbers[i] = temp;
+14.         i = i + 1;
+15.     }
+16. }
+17. void sort() {
+18.     i = 1;
+19.     while (i < count) {
+20.         j = i-1;
+21.         temp = numbers[i];
+22.         while (j >= 0 && numbers[j] < temp) {
+23.             numbers[j+1] = numbers[j];
+24.             j = j - 1;
+25.         }
+26.         numbers[j+1] = temp;
+27.         i = i + 1;
+28.     }
+29. }
+30. void printNums() {
+31.     printString("\n\n");
+32.     i = 0;
+33.     while(i < count) {
+34.         print numbers[i];
+35.         i = i + 1;
+36.     }
+37.     printString("\n");
+38. }
+39.     readNums();
+40.     sort();
+41.     printNums();
