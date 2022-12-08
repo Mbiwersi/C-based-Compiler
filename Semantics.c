@@ -18,7 +18,6 @@ extern SymTab *arrayTable;
 /* Semantics support routines */
 
 struct ExprRes *  doIntLit(char * digits)  { 
-  // printf("Doing int Lit of '%s'\n", digits);
   struct ExprRes *res;
   
   res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
@@ -33,7 +32,7 @@ struct ExprRes * doBoolLit(char * bool) {
 
   struct ExprRes * res;
   res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
-  res->Reg = AvailTmpReg();
+  res->Reg = AvailTmpReg();  
 
   // see if its true or false
   if(strcmp(bool, "true") == 0){
@@ -119,7 +118,8 @@ extern struct ExprRes * do2DarrayVal(char * name, struct ExprRes * rowIndex, str
   // Calculate offset row-majored 'addr = baseAddr + (rowIndex * colSize + colIndex) * dataSize'
   int offsetReg;
   offsetReg = AvailTmpReg();
-  struct Array* arr = (struct Array*) getCurrentAttr(table);
+  struct Attr * attr = (struct Attr *) getCurrentAttr(table);
+  struct Array* arr = attr->values;
   AppendSeq(result->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(rowIndex->Reg), Imm(arr->cols)));
   ReleaseTmpReg(rowIndex->Reg);
   AppendSeq(result->Instrs, GenInstr(NULL, "add", TmpRegName(offsetReg), TmpRegName(offsetReg), TmpRegName(colIndex->Reg)));
@@ -542,12 +542,18 @@ extern struct InstrSeq * do2DArrayAssign(char * name, struct ExprRes * rowIndex,
 
 
 extern void enterInt(char * varName) {
+  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
+  attr->type = "int";
+  attr->values = NULL;
   enterName(table, varName);
-  setCurrentAttr(table, "int");
+  setCurrentAttr(table, attr);
 }
 extern void enterBool(char * varName) {
+  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
+  attr->type = "bool";
+  attr->values = NULL;
   enterName(table, varName);
-  setCurrentAttr(table, "bool");
+  setCurrentAttr(table, attr);
 }
 
 extern struct ExprRes * doEq(struct ExprRes * Res1,  struct ExprRes * Res2) {
@@ -758,14 +764,20 @@ extern void intArrayDec(char * id, char * size) {
   // printf("int array '%s'\n", id);
   // printf("Size of array %d\n", atoi(size));
 
+  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
+  attr->type = "1D";
+
   struct Array * arr = (struct Array *) malloc(sizeof(struct Array));
 
   arr->spaceNeeded = (atoi(size) *4);
   arr->rows = atoi(size);
   arr->cols = 0;
 
+  attr->values = arr;
+
+
   enterName(table, id);
-  setCurrentAttr(table, arr);
+  setCurrentAttr(table, attr);
 }
 
 // Row-majored
@@ -774,12 +786,59 @@ extern void int2DArrayDec(char * name, char * rows, char * cols) {
   // printf("Rows = %s\n", rows);
   // printf("Cols = %s\n", cols);
 
+  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
+  attr->type = "2D";
+
   struct Array * arr = (struct Array *) malloc(sizeof(struct Array));
   arr->spaceNeeded = (atoi(rows) * atoi(cols) *4);
   arr->rows = atoi(rows);
   arr->cols = atoi(cols);
+
+  attr->values = arr;
   enterName(table, name);
-  setCurrentAttr(table, arr);
+  setCurrentAttr(table, attr);
+}
+
+extern void doFunctionDec(char * name, struct InstrSeq * seq) {
+  printf("Function name = '%s'\n", name);
+  
+  if (findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Function name already used");
+  }
+  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
+  attr->type = "Funct";
+  attr->values = AppendSeq(seq, GenInstr(NULL, "jr", "$ra", NULL, NULL));
+
+  enterName(table, name);
+  setCurrentAttr(table, attr);
+}
+
+extern struct InstrSeq * doFucntionCall(char * name) {
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Function not delcared");
+  }
+
+  struct InstrSeq * code = GenInstr(NULL, "jal", getCurrentName(table), NULL, NULL);
+  return code;
+}
+
+// print out the table
+void printSymTable(){
+    printf("\n");
+    for(int i = 0; i < table->size; i++){
+        SymEntry* current = table->contents[i];
+        printf("Row(%d) = ", i);
+        while(current != NULL){
+            struct Attr * attr = current->attribute;
+            printf(current->name);
+            printf("(%s)",attr->type);
+            printf(", ");
+            current = current->next;
+        }
+        printf("\n");
+    }
 }
 
 /*
@@ -810,6 +869,17 @@ void Finish(struct InstrSeq *Code) {
   code = GenInstr(NULL,".text",NULL,NULL,NULL);
   //AppendSeq(code,GenInstr(NULL,".align","2",NULL,NULL));
   AppendSeq(code,GenInstr(NULL,".globl","main",NULL,NULL));
+  AppendSeq(code, GenInstr(NULL, "j", "main", NULL, NULL));
+  hasMore = startIterator(table);
+  while (hasMore) {
+    struct Attr * attr = getCurrentAttr(table);
+    if(strcmp(attr->type, "Funct") == 0) {
+      AppendSeq(code, GenInstr(getCurrentName(table), NULL, NULL, NULL, NULL));
+      AppendSeq(code, attr->values);
+    }
+    hasMore = nextEntry(table);
+  }
+
   AppendSeq(code, GenInstr("main",NULL,NULL,NULL,NULL));
   AppendSeq(code,Code);
   AppendSeq(code, GenInstr(NULL, "li", "$v0", "10", NULL)); 
@@ -819,8 +889,9 @@ void Finish(struct InstrSeq *Code) {
   // allocate space for arrays
   hasMore = startIterator(table);
   while (hasMore) {
-    if(!(strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 )) {
-      struct Array * arr = getCurrentAttr(table);
+    struct Attr * attr = getCurrentAttr(table);
+    if((strcmp(attr->type, "1D") == 0 || strcmp(attr->type, "2D") == 0 )) {
+      struct Array * arr = attr->values;
       AppendSeq(code, GenInstr((char *) getCurrentName(table),".space", Imm(arr->spaceNeeded),NULL,NULL));
     }
     hasMore = nextEntry(table);
@@ -841,7 +912,8 @@ void Finish(struct InstrSeq *Code) {
 
  hasMore = startIterator(table);
  while (hasMore) {
-  if((strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 )) {
+  struct Attr * attr = getCurrentAttr(table);
+  if((strcmp(attr->type, "int") == 0 || strcmp(attr->type, "bool") == 0 )) {
     AppendSeq(code, GenInstr((char *) getCurrentName(table),".word","0",NULL,NULL));
   }
   hasMore = nextEntry(table);

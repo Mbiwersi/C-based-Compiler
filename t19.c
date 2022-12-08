@@ -4,15 +4,17 @@
     int i;
     int j;
     int k;
+    int count;
     
     printString("Enter 20 ints: ");
     i = 0;
+    count = 1;
     while (i < 5) {
         j = 0;
         while (j < 4) {
-            read(k);
-            twoD[i][j] = k;
+            twoD[i][j] = count;
             j = j + 1;
+            count = count + 1;
         }
         i = i+1;
     }

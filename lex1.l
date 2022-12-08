@@ -30,6 +30,7 @@ printlines                  {return Printlines;}
 printspaces                 {return Printspaces;}
 printString                 {return PrintString;}
 read                        {return Read;}
+void                        {return Void;}
 {letter}({letter}|{digit})*	{return Ident;}
 {digit}{digit}*		          {return IntLit;}
 \"({letter}|{digit}|{space}|{nl}|{all})*\"     {return StringLit;}

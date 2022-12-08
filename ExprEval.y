@@ -69,6 +69,7 @@ extern SymTab *arrayTable;
 %token LTE
 %token GT
 %token GTE
+%token Void
 
 %%
 
@@ -79,6 +80,7 @@ Dec			      :	Int Id ';' {enterInt($2);};
               | Bool Id ';' {enterBool($2);};
               | Int Id '[' ArraySize ']' ';' {intArrayDec($2, $4);};
               | Int Id '[' ArraySize ']' '[' ArraySize ']' ';' {int2DArrayDec($2, $4, $7);};
+              | Void Id '(' ')' '{' StmtSeq '}' {doFunctionDec($2, $6);};
 StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
               |	{$$ = NULL;} ;
 Stmt			    :	Print Expr ';' {$$ = doPrint($2, "_nl");};
@@ -93,6 +95,7 @@ Stmt			    :	Print Expr ';' {$$ = doPrint($2, "_nl");};
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
               | IF '(' BExpr ')' '{' StmtSeq '}' ELSE '{' StmtSeq '}' {$$ = doIfElse($3, $6, $10);};
               | WHILE '(' BExpr ')' '{' StmtSeq '}' {$$ = doWhile($3, $6);};
+              | Id '(' ')' ';' {printf("Got to function call\n");$$ = doFucntionCall($1);};
 ExprList      : BExpr ',' ExprList {$$ = appendExprNode($1, $3);};
               | BExpr {$$ = createExprNode($1);};
 BExpr         : BExpr OR BExpr1 {$$ = doOr($1, $3);};

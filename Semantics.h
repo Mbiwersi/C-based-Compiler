@@ -18,6 +18,11 @@ struct ExprResList {
 	struct ExprResList * Next;
 };
 
+struct Attr {
+  char * type;
+  void * values;
+};
+
 struct Array {
   int spaceNeeded;
   int rows;
@@ -73,7 +78,12 @@ extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprRes
 extern void intArrayDec(char * id, char * size);
 extern void int2DArrayDec(char * name, char * rows, char * cols);
 
+/* Functions */
+extern void doFunctionDec(char * name, struct InstrSeq * seq);
+extern struct InstrSeq * doFucntionCall(char * name);
+
 extern void enterInt(char * varName);
 extern void enterBool(char * varName);
 
+void printSymTable();
 extern void	Finish(struct InstrSeq *Code);

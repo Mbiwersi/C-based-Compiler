@@ -76,7 +76,8 @@ extern int yydebug;
     LT = 277,                      /* LT  */
     LTE = 278,                     /* LTE  */
     GT = 279,                      /* GT  */
-    GTE = 280                      /* GTE  */
+    GTE = 280,                     /* GTE  */
+    Void = 281                     /* Void  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -108,6 +109,7 @@ extern int yydebug;
 #define LTE 278
 #define GT 279
 #define GTE 280
+#define Void 281
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -122,7 +124,7 @@ union YYSTYPE
   struct InstrSeq * InstrSeq;
   struct IdList * IdList;
 
-#line 126 "y.tab.h"
+#line 128 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
