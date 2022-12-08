@@ -1,34 +1,62 @@
-1.     int numbers[30];
-2. 	int count;
-3. 	int i;
-4.     int j;
-5.     int temp;
-6.     printString("Enter the number of ints (30 or less) in the array: ");
-7.     read(count);
-8. 	i = 0;
-9. 	while (i < count) {
-10.         printString("Enter an int: ");
-11.         read(temp);
-12.         numbers[i] = temp;
-13. 		i = i + 1;
-14. 	}
-15.     
-16.     i = 1;
-17.     while (i < count) {
-18.         j = i-1;
-19.         temp = numbers[i];
-20.         while (j >= 0 && numbers[j] < temp) {
-21.             numbers[j+1] = numbers[j];
-22.             j = j - 1;
-23.         }
-24.         numbers[j+1] = temp;
-25.         i = i + 1;
-26.     }
-27. 	
-28.     printString("\n\n");
-29.     i = 0;
-30.     while(i < count){
-31.         print(numbers[i]);
-32.         i = i + 1;
-33.     }
-34.     printString("\n");
+1.     int rowSums[5];
+2.     int colSums[4];
+3.     int twoD[5][4];
+4.     int i;
+5.     int j;
+6.     int k;
+7.     
+8.     printString("Enter 20 ints: ");
+9.     i = 0;
+10.     while (i < 5) {
+11.         j = 0;
+12.         while (j < 4) {
+13.             read(k);
+14.             twoD[i][j] = k;
+15.             j = j + 1;
+16.         }
+17.         i = i+1;
+18.     }
+19.     
+20.     i = 0;
+21.     while (i < 5) {
+22.         j = 0;
+23.         rowSums[i] = 0;
+24.         while (j < 4) {
+25.             rowSums[i] = rowSums[i] + twoD[i][j];
+26.             j = j + 1;
+27.         }
+28.         i = i+1;
+29.     }
+30.     
+31.     j = 0;
+32.     while (j < 4) {
+33.         i = 0;
+34.         while (i < 5) {
+35.             colSums[j] = colSums[j] + twoD[i][j];
+36.             i = i + 1;
+37.         }
+38.         j = j+1;
+39.     }
+40.     
+41.     i = 0;
+42.      while (i < 5) {
+43.          j = 0;
+44.          print(rowSums[i]);
+45.          printString(":\t");
+46.          while (j < 4) {
+47.              print(twoD[i][j]);
+48.              printString("\t");
+49.              j = j + 1;
+50.          }
+51.          printString("\n");
+52.          i = i+1;
+53.      }
+54.     
+55.     j = 0;
+56.     printString("\t");
+57.     while (j < 4) {
+58.         print(colSums[j]);
+59.         printString("\t");
+60.         j = j+1;
+61.     }
+62.     printString("\n");

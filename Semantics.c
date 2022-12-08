@@ -76,7 +76,7 @@ struct ExprRes *  doRval(char * name)  {
 }
 
 extern struct ExprRes * doArrayVal(char * name, struct ExprRes * index) {
-  printf("Doing array val of '%s'\n",name);
+  // printf("Doing array val of '%s'\n",name);
 
   struct ExprRes *res;
 
@@ -101,6 +101,37 @@ extern struct ExprRes * doArrayVal(char * name, struct ExprRes * index) {
   free(index);
 
   return res;
+}
+
+extern struct ExprRes * do2DarrayVal(char * name, struct ExprRes * rowIndex, struct ExprRes * colIndex) {
+  struct ExprRes *result;
+
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  result = (struct ExprRes *) malloc(sizeof(struct ExprRes));
+  result->Reg = AvailTmpReg();
+  result->Instrs = rowIndex->Instrs;
+  AppendSeq(result->Instrs, colIndex->Instrs);
+
+  // Calculate offset row-majored 'addr = baseAddr + (rowIndex * colSize + colIndex) * dataSize'
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  struct Array* arr = (struct Array*) getCurrentAttr(table);
+  AppendSeq(result->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(rowIndex->Reg), Imm(arr->cols)));
+  ReleaseTmpReg(rowIndex->Reg);
+  AppendSeq(result->Instrs, GenInstr(NULL, "add", TmpRegName(offsetReg), TmpRegName(offsetReg), TmpRegName(colIndex->Reg)));
+  ReleaseTmpReg(colIndex->Reg);
+  AppendSeq(result->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(offsetReg), "4"));
+  AppendSeq(result->Instrs, GenInstr(NULL, "lw", TmpRegName(result->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(offsetReg);
+  free(rowIndex);
+  free(colIndex);
+
+  return result;
 }
 
 struct ExprRes * doAdd(struct ExprRes * Res1, struct ExprRes * Res2)  { 
@@ -474,6 +505,42 @@ extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, s
   return code;
 }
 
+// Row-majored
+extern struct InstrSeq * do2DArrayAssign(char * name, struct ExprRes * rowIndex, struct ExprRes * colIndex, struct ExprRes * result) {
+  struct InstrSeq *code;
+
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  code = rowIndex->Instrs;
+  AppendSeq(code, colIndex->Instrs);
+  AppendSeq(code, result->Instrs);
+
+  // Calculate offset 'addr = baseAddr + (rowIndex * colSize + colIndex) * dataSize'
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  struct Array* arr = (struct Array*) getCurrentAttr(table);
+  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(rowIndex->Reg), Imm(arr->cols)));
+  AppendSeq(code, GenInstr(NULL, "add", TmpRegName(offsetReg), TmpRegName(offsetReg), TmpRegName(colIndex->Reg)));
+  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(offsetReg), "4"));
+  AppendSeq(code, GenInstr(NULL, "sw", TmpRegName(result->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(result->Reg);
+  ReleaseTmpReg(offsetReg);
+  ReleaseTmpReg(rowIndex->Reg);
+  ReleaseTmpReg(colIndex->Reg);
+  free(result);
+  free(rowIndex);
+  free(colIndex);
+
+  return code;
+
+
+}
+
+
 extern void enterInt(char * varName) {
   enterName(table, varName);
   setCurrentAttr(table, "int");
@@ -680,6 +747,8 @@ extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq) {
   AppendSeq(seq2, GenInstr(NULL, "j", label, NULL, NULL));
 	AppendSeq(seq2, GenInstr(label2, NULL, NULL, NULL, NULL));
 
+  ReleaseTmpReg(bRes->Reg);
+
   free(bRes);
 
   return seq2;
@@ -689,12 +758,28 @@ extern void intArrayDec(char * id, char * size) {
   // printf("int array '%s'\n", id);
   // printf("Size of array %d\n", atoi(size));
 
-  char arraySize[10];
-  int newSize = atoi(size)*4;
-  snprintf(arraySize, 10, "%d", newSize);
+  struct Array * arr = (struct Array *) malloc(sizeof(struct Array));
+
+  arr->spaceNeeded = (atoi(size) *4);
+  arr->rows = atoi(size);
+  arr->cols = 0;
 
   enterName(table, id);
-  setCurrentAttr(table, strdup(arraySize));
+  setCurrentAttr(table, arr);
+}
+
+// Row-majored
+extern void int2DArrayDec(char * name, char * rows, char * cols) {
+  // printf("2D array name = '%s'\n", name);
+  // printf("Rows = %s\n", rows);
+  // printf("Cols = %s\n", cols);
+
+  struct Array * arr = (struct Array *) malloc(sizeof(struct Array));
+  arr->spaceNeeded = (atoi(rows) * atoi(cols) *4);
+  arr->rows = atoi(rows);
+  arr->cols = atoi(cols);
+  enterName(table, name);
+  setCurrentAttr(table, arr);
 }
 
 /*
@@ -735,7 +820,8 @@ void Finish(struct InstrSeq *Code) {
   hasMore = startIterator(table);
   while (hasMore) {
     if(!(strcmp(getCurrentAttr(table), "int") == 0 || strcmp(getCurrentAttr(table), "bool") == 0 )) {
-      AppendSeq(code, GenInstr((char *) getCurrentName(table),".space", getCurrentAttr(table),NULL,NULL));
+      struct Array * arr = getCurrentAttr(table);
+      AppendSeq(code, GenInstr((char *) getCurrentName(table),".space", Imm(arr->spaceNeeded),NULL,NULL));
     }
     hasMore = nextEntry(table);
   }

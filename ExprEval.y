@@ -31,6 +31,7 @@ extern SymTab *arrayTable;
 }
 
 %type <string> Id
+%type <string> ArraySize
 %type <IdList> IdentList
 %type <ExprRes> Factor
 %type <ExprRes> Term
@@ -76,7 +77,8 @@ Declarations	:	Dec Declarations { };
               |	{ };
 Dec			      :	Int Id ';' {enterInt($2);};
               | Bool Id ';' {enterBool($2);};
-              | Int Id '[' IntLit {intArrayDec($2, yytext);} ']' ';' {};
+              | Int Id '[' ArraySize ']' ';' {intArrayDec($2, $4);};
+              | Int Id '[' ArraySize ']' '[' ArraySize ']' ';' {int2DArrayDec($2, $4, $7);};
 StmtSeq 		  :	Stmt StmtSeq {$$ = AppendSeq($1, $2);};
               |	{$$ = NULL;} ;
 Stmt			    :	Print Expr ';' {$$ = doPrint($2, "_nl");};
@@ -87,6 +89,7 @@ Stmt			    :	Print Expr ';' {$$ = doPrint($2, "_nl");};
               | PrintString '(' Expr  ')' ';' {$$ = doPrintString();};
               |	Id '=' BExpr ';'	{$$ = doAssign($1, $3);};
               | Id '[' Expr ']' '=' BExpr ';' {$$ = doArrayAssign($1, $3, $6);};
+              | Id '[' Expr ']' '[' Expr ']' '=' BExpr ';' {$$ = do2DArrayAssign($1, $3, $6, $9);}
               |	IF '(' BExpr ')' '{' StmtSeq '}' {$$ = doIf($3, $6);};
               | IF '(' BExpr ')' '{' StmtSeq '}' ELSE '{' StmtSeq '}' {$$ = doIfElse($3, $6, $10);};
               | WHILE '(' BExpr ')' '{' StmtSeq '}' {$$ = doWhile($3, $6);};
@@ -119,9 +122,11 @@ Factor		    :	IntLit {$$ = doIntLit(yytext);};
               | BoolLit {$$ = doBoolLit(yytext);};
               | StringLit {doStringLit(yytext);};
               |	Id {$$ = doRval($1); };
-              | Id '[' BExpr ']' {printf("id = '%s'\n", $1);$$ = doArrayVal($1, $3);};
+              | Id '[' BExpr ']' {$$ = doArrayVal($1, $3);};
+              | Id '[' BExpr ']' '[' BExpr ']' {$$ = do2DarrayVal($1, $3, $6);};
 IdentList     : Id ',' IdentList {$$ = appendIdNode($3, $1);}; 
               | Id {$$ = createIdNode($1);};
+ArraySize     : IntLit {$$ = strdup(yytext);};
 Id			      : Ident {$$ = strdup(yytext);}
  
 %%

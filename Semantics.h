@@ -18,6 +18,12 @@ struct ExprResList {
 	struct ExprResList * Next;
 };
 
+struct Array {
+  int spaceNeeded;
+  int rows;
+  int cols;
+};
+
 
 
 
@@ -27,8 +33,10 @@ extern struct ExprRes * doBoolLit(char * bool);
 extern void doStringLit(char * string);
 extern struct ExprRes *  doRval(char * name);
 extern struct ExprRes * doArrayVal(char * name, struct ExprRes * index);
+extern struct ExprRes * do2DarrayVal(char * name, struct ExprRes * rowIndex, struct ExprRes * colIndex);
 extern struct InstrSeq *  doAssign(char * name,  struct ExprRes * Res1);
 extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, struct ExprRes * result);
+extern struct InstrSeq * do2DArrayAssign(char * name, struct ExprRes * index1, struct ExprRes * index2, struct ExprRes * result);
 extern struct ExprRes *  doAdd(struct ExprRes * Res1,  struct ExprRes * Res2);
 extern struct ExprRes * doSub(struct ExprRes * Res1, struct ExprRes * Res2);
 extern struct ExprRes *  doMult(struct ExprRes * Res1,  struct ExprRes * Res2);
@@ -63,6 +71,7 @@ extern struct ExprResList * createExprNode(struct ExprRes * Res1);
 extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprResList * list);
 
 extern void intArrayDec(char * id, char * size);
+extern void int2DArrayDec(char * name, char * rows, char * cols);
 
 extern void enterInt(char * varName);
 extern void enterBool(char * varName);

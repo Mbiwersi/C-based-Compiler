@@ -1,22 +1,8 @@
-int n[30];
-int i;
-int j;
-int count;
-int temp;
-i = 1;
-n[0] = 1;
-n[1] = 2;
-n[2] = 3;
-n[3] = 4;
-n[4] = 5;
-count = 5;
-    while (i < count) {
-        j = i-1;
-        temp = n[i];
-        while (j >= 0 && n[j] < temp) {
-            n[j+1] = n[j];
-            j = j - 1;
-        }
-        n[j+1] = temp;
-        i = i + 1;
-    }
+int numbers[3][4];
+numbers[0][0] = 1;
+numbers[0][1] = 2;
+numbers[0][2] = 3;
+numbers[0][3] = 4;
+numbers[1][0] = 5;
+numbers[1][1] = 6;
+print(numbers[0][0], numbers[1][1]);
