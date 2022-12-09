@@ -41,7 +41,7 @@ Custom built compiler using Yacc and Lex.
 Clone the project
 
 ```bash
-git clone https://github.com/Mbiwersi/Final-Project
+git clone https://github.com/Mbiwersi/C-based-Compiler
 ```
 
 Go to the project directory
@@ -79,7 +79,7 @@ Execute the Program
 Clone the project
 
 ```bash
-git clone https://github.com/Mbiwersi/Final-Project
+git clone https://github.com/Mbiwersi/C-based-Compiler
 ```
 
 Go to the project directory
