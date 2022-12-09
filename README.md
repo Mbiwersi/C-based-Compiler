@@ -3,6 +3,39 @@
 
 Custom built compiler using Yacc and Lex.
 
+## What is included
+#### Interger Variables and Expressions
+- Interger Literals, Variables
+- Assignment Statements
+- Arithemtic Operators (+, -, *, /, ^, -(unary minus))
+#### Boolean Variables and Expressions
+
+- Boolean Literals, Variables
+- Assignment Statements
+- Relational Operators (<, <=, ==, >=, >, !=)
+- Boolean Operators (!, &&, ||)
+
+#### Input / output
+- read(comma delimted list of variables)
+    - read(x, y, z)
+    - 1 (true), and 0 (false) can be input for boolean variables
+- print(comma delimted list of Expressions);
+    - print(2*x, x^3(z*w), abc/xyz, c)
+- printlines(expression)
+    - print expression number of newlines
+- printString("Literal String")
+
+#### Control Structures
+- if statements including optional else
+- while loops
+
+#### Arrays
+- 1 Dimensional Arrays
+- 2 Dimensional Arrays
+
+#### Functions
+- void parameterless functions
+
 ## Run Locally (GNU / MAC)
 
 Clone the project

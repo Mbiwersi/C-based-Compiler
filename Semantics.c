@@ -17,6 +17,7 @@ extern SymTab *arrayTable;
 
 /* Semantics support routines */
 
+/* Literals */
 struct ExprRes *  doIntLit(char * digits)  { 
   struct ExprRes *res;
   
@@ -74,64 +75,39 @@ struct ExprRes *  doRval(char * name)  {
   return res;
 }
 
-extern struct ExprRes * doArrayVal(char * name, struct ExprRes * index) {
-  // printf("Doing array val of '%s'\n",name);
-
-  struct ExprRes *res;
-
-  if (!findName(table, name)) {
-	  writeIndicator(getCurrentColumnNum());
-		writeMessage("Undeclared variable");
-  }
-
-  res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
-  res->Reg = AvailTmpReg();
-  res->Instrs = index->Instrs;
-
-  // calculate regoff
-  int offsetReg;
-  offsetReg = AvailTmpReg();
-  AppendSeq(res->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(index->Reg), "4"));
-  AppendSeq(res->Instrs, GenInstr(NULL, "lw", TmpRegName(res->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
-
-  ReleaseTmpReg(index->Reg);
-  ReleaseTmpReg(offsetReg);
-  // ReleaseTmpReg(res->Reg);
-  free(index);
-
-  return res;
+extern void enterInt(char * varName) {
+  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
+  attr->type = "int";
+  attr->values = NULL;
+  enterName(table, varName);
+  setCurrentAttr(table, attr);
+}
+extern void enterBool(char * varName) {
+  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
+  attr->type = "bool";
+  attr->values = NULL;
+  enterName(table, varName);
+  setCurrentAttr(table, attr);
 }
 
-extern struct ExprRes * do2DarrayVal(char * name, struct ExprRes * rowIndex, struct ExprRes * colIndex) {
-  struct ExprRes *result;
+/* Arithmetic Operators */
+struct InstrSeq * doAssign(char *name, struct ExprRes * Expr) { 
 
+  struct InstrSeq *code;
+  
   if (!findName(table, name)) {
 	  writeIndicator(getCurrentColumnNum());
 		writeMessage("Undeclared variable");
   }
 
-  result = (struct ExprRes *) malloc(sizeof(struct ExprRes));
-  result->Reg = AvailTmpReg();
-  result->Instrs = rowIndex->Instrs;
-  AppendSeq(result->Instrs, colIndex->Instrs);
+  code = Expr->Instrs;
+  
+  AppendSeq(code,GenInstr(NULL,"sw",TmpRegName(Expr->Reg), name,NULL));
 
-  // Calculate offset row-majored 'addr = baseAddr + (rowIndex * colSize + colIndex) * dataSize'
-  int offsetReg;
-  offsetReg = AvailTmpReg();
-  struct Attr * attr = (struct Attr *) getCurrentAttr(table);
-  struct Array* arr = attr->values;
-  AppendSeq(result->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(rowIndex->Reg), Imm(arr->cols)));
-  ReleaseTmpReg(rowIndex->Reg);
-  AppendSeq(result->Instrs, GenInstr(NULL, "add", TmpRegName(offsetReg), TmpRegName(offsetReg), TmpRegName(colIndex->Reg)));
-  ReleaseTmpReg(colIndex->Reg);
-  AppendSeq(result->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(offsetReg), "4"));
-  AppendSeq(result->Instrs, GenInstr(NULL, "lw", TmpRegName(result->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
-
-  ReleaseTmpReg(offsetReg);
-  free(rowIndex);
-  free(colIndex);
-
-  return result;
+  ReleaseTmpReg(Expr->Reg);
+  free(Expr);
+  
+  return code;
 }
 
 struct ExprRes * doAdd(struct ExprRes * Res1, struct ExprRes * Res2)  { 
@@ -329,41 +305,6 @@ extern struct InstrSeq * doRead(struct IdList* list) {
   return code;
 }
 
-// might need to free up the node after done with it
-extern struct IdList * createIdNode(char * varName) {
-  struct IdList * node;
-
-  node = (struct IdList *) malloc(sizeof(struct IdList));
-  node->Id = varName;
-  node->Next = NULL;
-
-  return node;
-}
-
-// might need to free up the list after done with it
-extern struct IdList * appendIdNode(struct IdList * list, char * varName) {
-  struct IdList * newNode = createIdNode(varName);
-  newNode->Next = list;
-
-  return newNode;
-}
-
-extern struct ExprResList * createExprNode(struct ExprRes * Res1) {
-  struct ExprResList * node;
-
-  node = (struct ExprResList *) malloc(sizeof(struct ExprResList));
-  node->Expr = Res1;
-  node->Next = NULL;
-
-  return node;
-}
-
-extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprResList * list) {
-  struct ExprResList * newNode = createExprNode(Res1);
-  newNode->Next = list;
-  return newNode;
-}
-
 extern struct InstrSeq * doPrintList(struct ExprResList * list) {
   struct InstrSeq *code;
   code = doPrint(list->Expr, "_space");
@@ -461,101 +402,8 @@ extern struct InstrSeq * doPrintString() {
   return code;
 }
 
-struct InstrSeq * doAssign(char *name, struct ExprRes * Expr) { 
 
-  struct InstrSeq *code;
-  
-  if (!findName(table, name)) {
-	  writeIndicator(getCurrentColumnNum());
-		writeMessage("Undeclared variable");
-  }
-
-  code = Expr->Instrs;
-  
-  AppendSeq(code,GenInstr(NULL,"sw",TmpRegName(Expr->Reg), name,NULL));
-
-  ReleaseTmpReg(Expr->Reg);
-  free(Expr);
-  
-  return code;
-}
-
-extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, struct ExprRes * Expr) {
-  struct InstrSeq *code;
-  
-  if (!findName(table, name)) {
-	  writeIndicator(getCurrentColumnNum());
-		writeMessage("Undeclared variable");
-  }
-
-  code = arrayLoc->Instrs; //////////////////////// FOUND BUG
-  AppendSeq(code, Expr->Instrs); ////////////////// THESE WHERE SWAPPED BEFORE, FIXED NOW
-
-  // times the index by 4
-  int offsetReg;
-  offsetReg = AvailTmpReg();
-  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(arrayLoc->Reg), "4"));
-  AppendSeq(code, GenInstr(NULL, "sw", TmpRegName(Expr->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
-
-  ReleaseTmpReg(Expr->Reg);
-  ReleaseTmpReg(offsetReg);
-  ReleaseTmpReg(arrayLoc->Reg);
-  free(Expr);
-  free(arrayLoc);
-  return code;
-}
-
-// Row-majored
-extern struct InstrSeq * do2DArrayAssign(char * name, struct ExprRes * rowIndex, struct ExprRes * colIndex, struct ExprRes * result) {
-  struct InstrSeq *code;
-
-  if (!findName(table, name)) {
-	  writeIndicator(getCurrentColumnNum());
-		writeMessage("Undeclared variable");
-  }
-
-  code = rowIndex->Instrs;
-  AppendSeq(code, colIndex->Instrs);
-  AppendSeq(code, result->Instrs);
-
-  // Calculate offset 'addr = baseAddr + (rowIndex * colSize + colIndex) * dataSize'
-  int offsetReg;
-  offsetReg = AvailTmpReg();
-  struct Array* arr = (struct Array*) getCurrentAttr(table);
-  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(rowIndex->Reg), Imm(arr->cols)));
-  AppendSeq(code, GenInstr(NULL, "add", TmpRegName(offsetReg), TmpRegName(offsetReg), TmpRegName(colIndex->Reg)));
-  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(offsetReg), "4"));
-  AppendSeq(code, GenInstr(NULL, "sw", TmpRegName(result->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
-
-  ReleaseTmpReg(result->Reg);
-  ReleaseTmpReg(offsetReg);
-  ReleaseTmpReg(rowIndex->Reg);
-  ReleaseTmpReg(colIndex->Reg);
-  free(result);
-  free(rowIndex);
-  free(colIndex);
-
-  return code;
-
-
-}
-
-
-extern void enterInt(char * varName) {
-  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
-  attr->type = "int";
-  attr->values = NULL;
-  enterName(table, varName);
-  setCurrentAttr(table, attr);
-}
-extern void enterBool(char * varName) {
-  struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
-  attr->type = "bool";
-  attr->values = NULL;
-  enterName(table, varName);
-  setCurrentAttr(table, attr);
-}
-
+/* Relational Operators */
 extern struct ExprRes * doEq(struct ExprRes * Res1,  struct ExprRes * Res2) {
 	struct ExprRes * Res;
   int reg = AvailTmpReg();
@@ -705,6 +553,7 @@ extern struct ExprRes * doOr (struct ExprRes * Res1,  struct ExprRes * Res2) {
   return Res;
 }
 
+/* Control Structures */
 extern struct InstrSeq * doIf(struct ExprRes * Res, struct InstrSeq * seq) {
 	struct InstrSeq * seq2;
   char * label = GenLabel();
@@ -760,7 +609,8 @@ extern struct InstrSeq * doWhile(struct ExprRes *bRes, struct InstrSeq * seq) {
   return seq2;
 }
 
-extern void intArrayDec(char * id, char * size) {
+/* Arrays */
+extern void arrayDec(char * id, char * size) {
   // printf("int array '%s'\n", id);
   // printf("Size of array %d\n", atoi(size));
 
@@ -780,8 +630,7 @@ extern void intArrayDec(char * id, char * size) {
   setCurrentAttr(table, attr);
 }
 
-// Row-majored
-extern void int2DArrayDec(char * name, char * rows, char * cols) {
+extern void twoDArrayDec(char * name, char * rows, char * cols) {
   // printf("2D array name = '%s'\n", name);
   // printf("Rows = %s\n", rows);
   // printf("Cols = %s\n", cols);
@@ -789,6 +638,7 @@ extern void int2DArrayDec(char * name, char * rows, char * cols) {
   struct Attr * attr = (struct Attr *) malloc(sizeof(struct Attr));
   attr->type = "2D";
 
+  // Row-majored
   struct Array * arr = (struct Array *) malloc(sizeof(struct Array));
   arr->spaceNeeded = (atoi(rows) * atoi(cols) *4);
   arr->rows = atoi(rows);
@@ -799,8 +649,128 @@ extern void int2DArrayDec(char * name, char * rows, char * cols) {
   setCurrentAttr(table, attr);
 }
 
+extern struct ExprRes * doArrayVal(char * name, struct ExprRes * index) {
+  // printf("Doing array val of '%s'\n",name);
+
+  struct ExprRes *res;
+
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  res = (struct ExprRes *) malloc(sizeof(struct ExprRes));
+  res->Reg = AvailTmpReg();
+  res->Instrs = index->Instrs;
+
+  // calculate regoff
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  AppendSeq(res->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(index->Reg), "4"));
+  AppendSeq(res->Instrs, GenInstr(NULL, "lw", TmpRegName(res->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(index->Reg);
+  ReleaseTmpReg(offsetReg);
+  // ReleaseTmpReg(res->Reg);
+  free(index);
+
+  return res;
+}
+
+extern struct ExprRes * do2DarrayVal(char * name, struct ExprRes * rowIndex, struct ExprRes * colIndex) {
+  struct ExprRes *result;
+
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  result = (struct ExprRes *) malloc(sizeof(struct ExprRes));
+  result->Reg = AvailTmpReg();
+  result->Instrs = rowIndex->Instrs;
+  AppendSeq(result->Instrs, colIndex->Instrs);
+
+  // Calculate offset row-majored 'addr = baseAddr + (rowIndex * colSize + colIndex) * dataSize'
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  struct Attr * attr = (struct Attr *) getCurrentAttr(table);
+  struct Array* arr = attr->values;
+  AppendSeq(result->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(rowIndex->Reg), Imm(arr->cols)));
+  ReleaseTmpReg(rowIndex->Reg);
+  AppendSeq(result->Instrs, GenInstr(NULL, "add", TmpRegName(offsetReg), TmpRegName(offsetReg), TmpRegName(colIndex->Reg)));
+  ReleaseTmpReg(colIndex->Reg);
+  AppendSeq(result->Instrs, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(offsetReg), "4"));
+  AppendSeq(result->Instrs, GenInstr(NULL, "lw", TmpRegName(result->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(offsetReg);
+  free(rowIndex);
+  free(colIndex);
+
+  return result;
+}
+
+extern struct InstrSeq * doArrayAssign(char * name, struct ExprRes * arrayLoc, struct ExprRes * Expr) {
+  struct InstrSeq *code;
+  
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  code = arrayLoc->Instrs; //////////////////////// FOUND BUG
+  AppendSeq(code, Expr->Instrs); ////////////////// THESE WHERE SWAPPED BEFORE, FIXED NOW
+
+  // times the index by 4
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(arrayLoc->Reg), "4"));
+  AppendSeq(code, GenInstr(NULL, "sw", TmpRegName(Expr->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(Expr->Reg);
+  ReleaseTmpReg(offsetReg);
+  ReleaseTmpReg(arrayLoc->Reg);
+  free(Expr);
+  free(arrayLoc);
+  return code;
+}
+
+extern struct InstrSeq * do2DArrayAssign(char * name, struct ExprRes * rowIndex, struct ExprRes * colIndex, struct ExprRes * result) {
+  struct InstrSeq *code;
+
+  if (!findName(table, name)) {
+	  writeIndicator(getCurrentColumnNum());
+		writeMessage("Undeclared variable");
+  }
+
+  code = rowIndex->Instrs;
+  AppendSeq(code, colIndex->Instrs);
+  AppendSeq(code, result->Instrs);
+
+  // Calculate offset 'addr = baseAddr + (rowIndex * colSize + colIndex) * dataSize'
+  int offsetReg;
+  offsetReg = AvailTmpReg();
+  struct Array* arr = (struct Array*) getCurrentAttr(table);
+  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(rowIndex->Reg), Imm(arr->cols)));
+  AppendSeq(code, GenInstr(NULL, "add", TmpRegName(offsetReg), TmpRegName(offsetReg), TmpRegName(colIndex->Reg)));
+  AppendSeq(code, GenInstr(NULL, "mul", TmpRegName(offsetReg), TmpRegName(offsetReg), "4"));
+  AppendSeq(code, GenInstr(NULL, "sw", TmpRegName(result->Reg), RegOffwReg(TmpRegName(offsetReg), name), NULL));
+
+  ReleaseTmpReg(result->Reg);
+  ReleaseTmpReg(offsetReg);
+  ReleaseTmpReg(rowIndex->Reg);
+  ReleaseTmpReg(colIndex->Reg);
+  free(result);
+  free(rowIndex);
+  free(colIndex);
+
+  return code;
+
+
+}
+
+/* Functions */
 extern void doFunctionDec(char * name, struct InstrSeq * seq) {
-  printf("Function name = '%s'\n", name);
+  // printf("Function name = '%s'\n", name);
   
   if (findName(table, name)) {
 	  writeIndicator(getCurrentColumnNum());
@@ -824,7 +794,7 @@ extern struct InstrSeq * doFucntionCall(char * name) {
   return code;
 }
 
-// print out the table
+/* Extra */
 void printSymTable(){
     printf("\n");
     for(int i = 0; i < table->size; i++){
@@ -841,24 +811,6 @@ void printSymTable(){
     }
 }
 
-/*
-
-extern struct InstrSeq * doIf(struct ExprRes *res1, struct ExprRes *res2, struct InstrSeq * seq) {
-	struct InstrSeq *seq2;
-	char * label;
-	label = GenLabel();
-	AppendSeq(res1->Instrs, res2->Instrs);
-	AppendSeq(res1->Instrs, GenInstr(NULL, "bne", TmpRegName(res1->Reg), TmpRegName(res2->Reg), label));
-	seq2 = AppendSeq(res1->Instrs, seq);
-	AppendSeq(seq2, GenInstr(label, NULL, NULL, NULL, NULL));
-	ReleaseTmpReg(res1->Reg);
-  	ReleaseTmpReg(res2->Reg);
-	free(res1);
-	free(res2);
-	return seq2;
-}
-
-*/
 void Finish(struct InstrSeq *Code) { 
   struct InstrSeq *code;
   //struct SymEntry *entry;
@@ -924,6 +876,54 @@ void Finish(struct InstrSeq *Code) {
   return;
 }
 
+extern struct IdList * createIdNode(char * varName) {
+  struct IdList * node;
 
+  node = (struct IdList *) malloc(sizeof(struct IdList));
+  node->Id = varName;
+  node->Next = NULL;
 
+  return node;
+}
 
+extern struct IdList * appendIdNode(struct IdList * list, char * varName) {
+  struct IdList * newNode = createIdNode(varName);
+  newNode->Next = list;
+
+  return newNode;
+}
+
+extern struct ExprResList * createExprNode(struct ExprRes * Res1) {
+  struct ExprResList * node;
+
+  node = (struct ExprResList *) malloc(sizeof(struct ExprResList));
+  node->Expr = Res1;
+  node->Next = NULL;
+
+  return node;
+}
+
+extern struct ExprResList * appendExprNode(struct ExprRes * Res1, struct ExprResList * list) {
+  struct ExprResList * newNode = createExprNode(Res1);
+  newNode->Next = list;
+  return newNode;
+}
+
+/*
+
+extern struct InstrSeq * doIf(struct ExprRes *res1, struct ExprRes *res2, struct InstrSeq * seq) {
+	struct InstrSeq *seq2;
+	char * label;
+	label = GenLabel();
+	AppendSeq(res1->Instrs, res2->Instrs);
+	AppendSeq(res1->Instrs, GenInstr(NULL, "bne", TmpRegName(res1->Reg), TmpRegName(res2->Reg), label));
+	seq2 = AppendSeq(res1->Instrs, seq);
+	AppendSeq(seq2, GenInstr(label, NULL, NULL, NULL, NULL));
+	ReleaseTmpReg(res1->Reg);
+  	ReleaseTmpReg(res2->Reg);
+	free(res1);
+	free(res2);
+	return seq2;
+}
+
+*/

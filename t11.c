@@ -1,4 +1,4 @@
-int numbers[30];
+bool numbers[30];
 int count;
 int i;
 int j;
