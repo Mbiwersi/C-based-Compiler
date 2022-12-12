@@ -8,13 +8,14 @@ Custom built compiler using Yacc and Lex.
 - Interger Literals, Variables
 - Assignment Statements
 - Arithemtic Operators (+, -, *, /, ^, -(unary minus))
+- P
 #### Boolean Variables and Expressions
 
 - Boolean Literals, Variables
 - Assignment Statements
 - Relational Operators (<, <=, ==, >=, >, !=)
 - Boolean Operators (!, &&, ||)
-
+- NOTE: Parentheses do not work - we when through it in office hours can could not figure out why
 #### Input / output
 - read(comma delimted list of variables)
     - read(x, y, z)
